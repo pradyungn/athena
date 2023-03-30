@@ -1,31 +1,44 @@
+(setq gc-cons-threshold most-positive-fixnum)
+
+(add-hook 'emacs-startup-hook
+		  (lambda ()
+			(setq gc-cons-threshold (expt 2 23))))
+
 ;; startup time - stolen directly from efs
-(setq gc-cons-threshold (* 50 1000 1000))
+;; (defun hades/display-startup-time ()
+;;   (message "Emacs loaded in %s with %d garbage collections."
+;; 		   (format "%.2f seconds"
+;; 				   (float-time
+;; 					(time-subtract after-init-time before-init-time)))
+;; 		   gcs-done))
 
-(defun hades/display-startup-time ()
-  (message "Emacs loaded in %s with %d garbage collections."
-	   (format "%.2f seconds"
-		   (float-time
-		    (time-subtract after-init-time before-init-time)))
-	   gcs-done))
+;; (add-hook 'emacs-startup-hook #'hades/display-startup-time)
 
-(add-hook 'emacs-startup-hook #'hades/display-startup-time)
-
+;; shut up emacs ;-;
 (setq inhibit-startup-message t)
 (setq ring-bell-function 'ignore)
-
-(setq inhibit-startup-message t)
 
 (scroll-bar-mode -1) ;; no scrollbar
 (tool-bar-mode -1) ;; no toolbar
 (tooltip-mode -1) ;; no tooltips
 (menu-bar-mode -1) ;; no menu bar
+(fringe-mode 0)
 
-(set-fringe-mode 5) ;; padding!
+;; default font - if mountain fails, don't want to be blinded
+(load-theme 'wombat t)
 
-(set-face-attribute 'default nil :font "Iosevka" :height 90) ;; set font
+;; fonts
+(set-face-attribute 'default nil :font "Iosevka" :height 90)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 90)
+(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 110 :weight 'regular)
 
-(add-to-list 'custom-theme-load-path "/home/pradyungn/Documents/emacs.hades/themes/")
-(load-theme 'wombat) ;; temporary theme, it'll work for now
+;; (on-platform-do (osx (set-face-attribute 'default nil :font "Fira Mono" :height 12))
+;; 				(linux ))
+
+
+;; prevent resize window on startup
+(setq frame-inhibit-implied-resize t)
+(add-to-list 'initial-frame-alist '(internal-border-width . 12))
 
 ;; smooth scroll settings - pulled from emacs wiki
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
@@ -39,17 +52,12 @@
 ;; trailing whitespace
 (setq-default show-trailing-whitespace nil)
 
-;; set font
-;; (on-platform-do
-;; (osx (set-face-attribute 'default nil :font "Fira Mono" :height 12))
-;; (linux ))
-
 ;; package manager
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+						 ("org" . "https://orgmode.org/elpa/")
+						 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -70,8 +78,9 @@
 
 ;; disable line numbers if in a "writing" mode
 (dolist (mode '(org-mode-hook
-		term-mode-hook
-		eshell-mode-hook))
+				term-mode-hook
+				eshell-mode-hook
+				vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
 ;; replace default emacs functionality with saner alternatives
@@ -79,42 +88,45 @@
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("V-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
+		 :map ivy-minibuffer-map
+		 ("TAB" . ivy-alt-done)
+		 ("C-l" . ivy-alt-done)
+		 ("C-j" . ivy-next-line)
+		 ("C-k" . ivy-previous-line)
+		 :map ivy-switch-buffer-map
+		 ("C-k" . ivy-previous-line)
+		 ("C-l" . ivy-done)
+		 ("V-d" . ivy-switch-buffer-kill)
+		 :map ivy-reverse-i-search-map
+		 ("C-k" . ivy-previous-line)
+		 ("C-d" . ivy-reverse-i-search-kill))
   :config
   (ivy-mode 1))
 
 ;; enable doom theme
+(add-to-list 'custom-theme-load-path "/home/pradyungn/Documents/emacs.hades/themes/")
 (use-package doom-themes
-  :init (load-theme 'doom-mountain t))
+  :init (load-theme 'doom-mountain t)
+  :config
+  (doom-themes-org-config))
 
 ;; Doom modeline with icons
 (use-package all-the-icons)
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom (
-	   (doom-modeline-height 40)))
+		   (doom-modeline-height 40)))
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
-;(setq user-emacs-directory "~/.cache/emacs")
+										;(setq user-emacs-directory "~/.cache/emacs")
 
 (use-package no-littering)
 
 ;; no-littering doesn't set this by default so we must place
 ;; auto save files in the same path as it uses for sessions
 (setq auto-save-file-name-transforms
-      `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+	  `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -130,10 +142,10 @@
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history)))
+		 ("C-x b" . counsel-ibuffer)
+		 ("C-x C-f" . counsel-find-file)
+		 :map minibuffer-local-map
+		 ("C-r" . 'counsel-minibuffer-history)))
 
 ;; better help functions
 (use-package helpful
@@ -148,7 +160,12 @@
 
 ;; vim bindings, my love
 ;; undo system for evil
-(use-package undo-fu)
+(use-package undo-fu
+  :after evil)
+
+;; session persistence
+(use-package undo-fu-session)
+(undo-fu-session-global-mode)
 
 (use-package general
   :after evil
@@ -156,10 +173,10 @@
   (general-evil-setup t)
 
   (general-create-definer hades/leader-keys
-    :states '(insert visual emacs normal)
-    :keymaps 'override
-    :prefix "SPC"
-    :global-prefix "C-SPC")
+	:states '(insert visual emacs normal)
+	:keymaps 'override
+	:prefix "SPC"
+	:global-prefix "C-SPC")
   )
 
 (use-package evil
@@ -179,9 +196,6 @@
   :after evil
   :config
   (evil-collection-init))
-
-;; Oonicorn
-(use-package org)
 
 ;; Hydra for nice stuffs
 (use-package hydra)
@@ -236,28 +250,133 @@ _h_   _l_   _n_ew       _-_ dec height
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-;; assembling leader-based keybinds 
-(hades/leader-keys
-  ";" '(counsel-M-x :which-key "M-x")
-  "b" '(hydra-buffers/body :which-key "buffer commands")
-  "w" '(hydra-windows/body :which-key "window management")
-  "nn" '(comment-dwim :which-key "comment toggle")
-  "." '(find-file :which-key "browser")
-  "p" '(:keymap projectile-command-map :which-key "projects")
-  "gg" '(magit-status :which-key "magit"))
+;; path management
+;; (use-package exec-path-from-shell)
+;; (exec-path-from-shell-initialize)
 
+;; auto-format
+(use-package format-all
+  :hook (prog-mode . format-all-mode))
 
-(use-package magit)
+;; magit
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; text-scaling
-(general-define-key
- "C--" 'text-scale-decrease)
-(general-define-key
- "C-=" 'text-scale-increase)
+;; org mode!!
+(defun hades/org-init ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (visual-line-mode 1)
+  (setq org-fontify-quote-and-verse-blocks t))
 
-;; fun binds
-(general-define-key
- "M-w" 'counsel-switch-buffer :which-key "windows")
+(defun hades/org-fonts ()
+  (dolist (face '((org-level-1 . 1.5)
+				  (org-level-2 . 1.4)
+				  (org-level-3 . 1.2)
+				  (org-level-4 . 1.2)))
+				(set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (cdr face)))
 
-;; Make gc pauses faster by decreasing the threshold.
-(setq gc-cons-threshold (* 2 1000 1000))
+	;; Ensure that anything that should be fixed-pitch in Org files appears that way
+	(set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
+	(set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
+	(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+	(set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
+	(set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
+	(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+	(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+	(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+	(set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
+	(set-face-attribute 'line-number nil :inherit 'fixed-pitch)
+	(set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+
+  (use-package org
+	:hook (org-mode . hades/org-init)
+	:config
+	(hades/org-fonts)
+	:custom
+	(org-hide-emphasis-markers t))
+
+  (use-package org-bullets
+	:after org
+	:hook (org-mode . org-bullets-mode))
+
+  (font-lock-add-keywords 'org-mode
+						  '(("^ *\\([-]\\) "
+							 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+  ;; dashboard
+  (use-package dashboard
+	:ensure t
+	:config
+	(dashboard-setup-startup-hook)
+	:custom
+	(dashboard-banner-logo-title "Oh, not this shit again...")
+	(dashboard-startup-banner 'logo)
+	(dashboard-center-content t)
+	(dashboard-set-heading-icons t)
+	(dashboard-set-file-icons t)
+	(dashboard-projects-backend 'projectile)
+	(dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+	(dashboard-items '((recents  . 5)
+					   (bookmarks . 5)
+					   (projects . 5)
+					   (agenda . 5))))
+
+  ;; dashboard hook doesn't really work
+  (setq initial-buffer-choice (lambda ()
+								(get-buffer-create "*dashboard*")
+								(dashboard-refresh-buffer)))
+
+  ;; assembling leader-based keybinds
+  (hades/leader-keys
+	";" '(counsel-M-x :which-key "M-x")
+	"b" '(hydra-buffers/body :which-key "buffer commands")
+	"w" '(hydra-windows/body :which-key "window management")
+	"nn" '(comment-dwim :which-key "comment toggle")
+	"." '(find-file :which-key "browser")
+	"p" '(:keymap projectile-command-map :which-key "projects")
+	"gg" '(magit-status :which-key "magit"))
+
+  ;; text-scaling
+  (general-define-key
+   "C--" 'text-scale-decrease)
+  (general-define-key
+   "C-=" 'text-scale-increase)
+
+  ;; fun binds
+  (general-define-key
+   "M-w" 'counsel-switch-buffer :which-key "windows")
+
+  ;; Make gc pauses faster by decreasing the threshold.
+  (setq gc-cons-threshold (* 2 1000 1000))
+
+  ;; personal settings
+  (setq user-full-name "Pradyun Narkadamilli"
+		user-mail-address "pradyungn@gmail.com")
+
+  (setq org-directory "~/Notes/")
+  (setq org-agenda-files (list org-directory))
+
+  ;; fun tab stuff
+  (setq-default tab-width 4)
+
+  ;; other random settings
+  (setq undo-limit 80000000
+		evil-want-fine-undo t)
+
+  (delete-selection-mode 1)
+
+  (custom-set-variables
+   ;; custom-set-variables was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   '(package-selected-packages
+	 '(org-bullets which-key vterm use-package undo-fu-session undo-fu rainbow-delimiters no-littering magit ivy-rich hydra helpful general format-all exec-path-from-shell evil-collection esup doom-themes doom-modeline dashboard counsel-projectile all-the-icons)))
+  (custom-set-faces
+   ;; custom-set-faces was added by Custom.
+   ;; If you edit it by hand, you could mess it up, so be careful.
+   ;; Your init file should contain only one such instance.
+   ;; If there is more than one, they won't work right.
+   )
