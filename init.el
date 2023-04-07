@@ -30,11 +30,10 @@
 ;; fonts
 (set-face-attribute 'default nil :font "Iosevka" :height 90)
 (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 90)
-(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 110 :weight 'regular)
+(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 115 :weight 'regular)
 
 ;; (on-platform-do (osx (set-face-attribute 'default nil :font "Fira Mono" :height 12))
 ;; 				(linux ))
-
 
 ;; prevent resize window on startup
 (setq frame-inhibit-implied-resize t)
@@ -197,6 +196,53 @@
   :config
   (evil-collection-init))
 
+;; window functions - stolen from doom emacs (hlissner ily)
+(defun hades/window-swap (direction)
+  "Move current window to the next window in DIRECTION.
+If there are no windows there and there is only one window, split in that
+direction and place this window there. If there are no windows and this isn't
+the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
+  (when (window-dedicated-p)
+    (user-error "Cannot swap a dedicated window"))
+  (let* ((this-window (selected-window))
+         (this-buffer (current-buffer))
+         (that-window (windmove-find-other-window direction nil this-window))
+         (that-buffer (window-buffer that-window)))
+    (when (or (minibufferp that-buffer)
+              (window-dedicated-p this-window))
+      (setq that-buffer nil that-window nil))
+    (if (not (or that-window (one-window-p t)))
+        (funcall (pcase direction
+                   ('left  #'evil-window-move-far-left)
+                   ('right #'evil-window-move-far-right)
+                   ('up    #'evil-window-move-very-top)
+                   ('down  #'evil-window-move-very-bottom)))
+      (unless that-window
+        (setq that-window
+              (split-window this-window nil
+                            (pcase direction
+                              ('up 'above)
+                              ('down 'below)
+                              (_ direction))))
+        (with-selected-window that-window
+          (switch-to-buffer (doom-fallback-buffer)))
+        (setq that-buffer (window-buffer that-window)))
+      (window-swap-states this-window that-window)
+      (select-window that-window))))
+
+(defun hades/window-move-left ()
+  "Swap windows to the left."
+  (interactive) (hades/window-swap 'left))
+(defun hades/window-move-right ()
+  "Swap windows to the right"
+  (interactive) (hades/window-swap 'right))
+(defun hades/window-move-up ()
+  "Swap windows upward."
+  (interactive) (hades/window-swap 'up))
+(defun hades/window-move-down ()
+  "Swap windows downward."
+  (interactive) (hades/window-swap 'down))
+
 ;; Hydra for nice stuffs
 (use-package hydra)
 
@@ -226,10 +272,10 @@ _h_   _l_   _n_ew       _-_ dec height
   ("c" evil-window-delete)
   ("n" evil-window-split)
   ("v" evil-window-vsplit)
-  ("H" windmove-swap-states-left)
-  ("J" windmove-swap-states-down)
-  ("K" windmove-swap-states-up)
-  ("L" windmove-swap-states-right)
+  ("H" hades/window-move-left)
+  ("J" hades/window-move-down)
+  ("K" hades/window-move-up)
+  ("L" hades/window-move-right)
   (">" evil-window-increase-width :exit nil)
   ("<" evil-window-decrease-width :exit nil)
   ("=" evil-window-increase-height :exit nil )
@@ -274,109 +320,124 @@ _h_   _l_   _n_ew       _-_ dec height
   (dolist (face '((org-level-1 . 1.5)
 				  (org-level-2 . 1.4)
 				  (org-level-3 . 1.2)
-				  (org-level-4 . 1.2)))
-				(set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (cdr face)))
+				  (org-level-4 . 1.0)))
+	(set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (cdr face)))
 
-	;; Ensure that anything that should be fixed-pitch in Org files appears that way
-	(set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch)
-	(set-face-attribute 'org-table nil    :inherit 'fixed-pitch)
-	(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
-	(set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch))
-	(set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch))
-	(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-	(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-	(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-	(set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch)
-	(set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-	(set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+  (plist-put org-format-latex-options :scale 1.4)
 
-  (use-package org
-	:hook (org-mode . hades/org-init)
-	:config
-	(hades/org-fonts)
-	:custom
-	(org-hide-emphasis-markers t))
+  ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 100)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 100)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 100)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 100)
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 100)
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 100)
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch) :height 100)
 
-  (use-package org-bullets
-	:after org
-	:hook (org-mode . org-bullets-mode))
+(use-package org
+  :pin org
+  :hook (org-mode . hades/org-init)
+  :config
+  (hades/org-fonts)
+  :custom
+  (org-hide-emphasis-markers t))
 
-  (font-lock-add-keywords 'org-mode
-						  '(("^ *\\([-]\\) "
-							 (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+;; weird pdflatex bug
+(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
-  ;; dashboard
-  (use-package dashboard
-	:ensure t
-	:config
-	(dashboard-setup-startup-hook)
-	:custom
-	(dashboard-banner-logo-title "Oh, not this shit again...")
-	(dashboard-startup-banner 'logo)
-	(dashboard-center-content t)
-	(dashboard-set-heading-icons t)
-	(dashboard-set-file-icons t)
-	(dashboard-projects-backend 'projectile)
-	(dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
-	(dashboard-items '((recents  . 5)
-					   (bookmarks . 5)
-					   (projects . 5)
-					   (agenda . 5))))
+(defun hades/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+		visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
 
-  ;; dashboard hook doesn't really work
-  (setq initial-buffer-choice (lambda ()
-								(get-buffer-create "*dashboard*")
-								(dashboard-refresh-buffer)))
+(use-package visual-fill-column
+  :defer t
+  :hook (org-mode . hades/org-mode-visual-fill))
 
-  ;; assembling leader-based keybinds
-  (hades/leader-keys
-	";" '(counsel-M-x :which-key "M-x")
-	"b" '(hydra-buffers/body :which-key "buffer commands")
-	"w" '(hydra-windows/body :which-key "window management")
-	"nn" '(comment-dwim :which-key "comment toggle")
-	"." '(find-file :which-key "browser")
-	"p" '(:keymap projectile-command-map :which-key "projects")
-	"gg" '(magit-status :which-key "magit"))
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode)
+  :custom
+  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
-  ;; text-scaling
-  (general-define-key
-   "C--" 'text-scale-decrease)
-  (general-define-key
-   "C-=" 'text-scale-increase)
+(font-lock-add-keywords 'org-mode
+						'(("^ *\\([-]\\) "
+						   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
-  ;; fun binds
-  (general-define-key
-   "M-w" 'counsel-switch-buffer :which-key "windows")
+;; dashboard
+(use-package dashboard
+  :pin manual
+  :config
+  (dashboard-setup-startup-hook)
+  :custom
+  (dashboard-banner-logo-title "Oh, not this shit again...")
+  (dashboard-startup-banner 'logo)
+  (dashboard-center-content t)
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  (dashboard-projects-backend 'projectile)
+  (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+  (dashboard-items '((recents  . 5)
+					 (bookmarks . 5)
+					 (projects . 5)
+					 (agenda . 5))))
 
-  ;; Make gc pauses faster by decreasing the threshold.
-  (setq gc-cons-threshold (* 2 1000 1000))
+;; dashboard hook doesn't really work
+(setq initial-buffer-choice (lambda ()
+							  (get-buffer-create "*dashboard*")
+							  (dashboard-refresh-buffer)))
 
-  ;; personal settings
-  (setq user-full-name "Pradyun Narkadamilli"
-		user-mail-address "pradyungn@gmail.com")
+;; assembling leader-based keybinds
+(hades/leader-keys
+  ";" '(counsel-M-x :which-key "M-x")
+  "b" '(hydra-buffers/body :which-key "buffer commands")
+  "w" '(hydra-windows/body :which-key "window management")
+  "nn" '(comment-dwim :which-key "comment toggle")
+  "." '(find-file :which-key "browser")
+  "p" '(:keymap projectile-command-map :which-key "projects")
+  "gg" '(magit-status :which-key "magit"))
 
-  (setq org-directory "~/Notes/")
-  (setq org-agenda-files (list org-directory))
+;; text-scaling
+(general-define-key
+ "C--" 'text-scale-decrease)
+(general-define-key
+ "C-=" 'text-scale-increase)
 
-  ;; fun tab stuff
-  (setq-default tab-width 4)
+;; fun binds
+(general-define-key
+ "M-w" 'counsel-switch-buffer :which-key "windows")
 
-  ;; other random settings
-  (setq undo-limit 80000000
-		evil-want-fine-undo t)
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
 
-  (delete-selection-mode 1)
+;; personal settings
+(setq user-full-name "Pradyun Narkadamilli"
+	  user-mail-address "pradyungn@gmail.com")
 
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(package-selected-packages
-	 '(org-bullets which-key vterm use-package undo-fu-session undo-fu rainbow-delimiters no-littering magit ivy-rich hydra helpful general format-all exec-path-from-shell evil-collection esup doom-themes doom-modeline dashboard counsel-projectile all-the-icons)))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   )
+(setq org-directory "~/Notes/")
+(setq org-agenda-files (list org-directory))
+
+;; fun tab stuff
+(setq-default tab-width 4)
+
+;; other random settings
+(setq undo-limit 80000000
+	  evil-want-fine-undo t)
+
+(delete-selection-mode 1)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(org-bullets which-key vterm use-package undo-fu-session undo-fu rainbow-delimiters no-littering magit ivy-rich hydra helpful general format-all exec-path-from-shell evil-collection esup doom-themes doom-modeline dashboard counsel-projectile all-the-icons)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
