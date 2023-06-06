@@ -28,20 +28,20 @@ Can be an integer to determine the exact padding."
   "Mountain Theme for Emacs"
 
   ;; name        default   256           16
-  ((bg         '("#0f0f0f" "#0f0f0f"       "black"  ))
+  ((bg         '("#0f0f0f" "#0f0f0f"     "black"  ))
    (fg         '("#f0f0f0" "#f0f0f0"     "brightwhite"  ))
 
    ;; These are off-color variants of bg/fg, used primarily for `solaire-mode',
    ;; but can also be useful as a basis for subtle highlights (e.g. for hl-line
    ;; or region), especially when paired with the `doom-darken', `doom-lighten',
    ;; and `doom-blend' helper functions.
-   (bg-alt     '("#262626" "#262626"       "black"        ))
+   (bg-alt     '("#262626" "#262626"     "black"        ))
    (fg-alt     '("#e7e7e7" "#e7e7e7"     "white"        ))
 
    ;; These should represent a spectrum from bg to fg, where base0 is a starker
    ;; bg and base8 is a starker fg. For example, if bg is light grey and fg is
    ;; dark grey, base0 should be white and base8 should be black.
-   (base0      '("#191919" "#191919"       "black"        ))
+   (base0      '("#191919" "#191919"     "black"        ))
    (base1      '("#262626" "#262626"     "brightblack"  ))
    (base2      '("#393939" "#393939"     "brightblack"  ))
    (base3      '("#4c4c4c" "#4c4c4c"     "brightblack"  ))
@@ -90,16 +90,16 @@ Can be an integer to determine the exact padding."
    (vc-added       green)
    (vc-deleted     red)
 
-	;; org hierarchy
-	(level1)
-	(level2 dark-blue)
-	(level3 green)
-	(level4 yellow)
-	(level5 magenta)
-	(level6 dark-cyan)
-	(level7 scream)
-	(level8 green)
-	(level9 blue)
+   ;; org hierarchy
+   (level1)
+   (level2 dark-blue)
+   (level3 green)
+   (level4 yellow)
+   (level5 magenta)
+   (level6 dark-cyan)
+   (level7 scream)
+   (level8 green)
+   (level9 blue)
 
    ;; custom categories
    (modeline-bg     base1)
@@ -107,21 +107,21 @@ Can be an integer to determine the exact padding."
    (modeline-fg     fg)
    (modeline-fg-alt base4)
    (-modeline-pad
-	(when doom-mountain-padded-modeline
-	  (if (integerp doom-mountain-padded-modeline)
-		  doom-mountain-padded-modeline
-		4))))
+    (when doom-mountain-padded-modeline
+      (if (integerp doom-mountain-padded-modeline)
+	  doom-mountain-padded-modeline
+	4))))
 
   ;; --- faces ------------------------------
   (((line-number &override) :foreground base4)
    ((line-number-current-line &override) :foreground blue :bold bold)
 
    (mode-line
-	:background modeline-bg :foreground modeline-fg
-	:box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg)))
+    :background modeline-bg :foreground modeline-fg
+    :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg)))
    (mode-line-inactive
-	:background modeline-bg-alt :foreground modeline-fg-alt
-	:box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-alt)))
+    :background modeline-bg-alt :foreground modeline-fg-alt
+    :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-alt)))
 
 	;;;; rainbow-delimiters
    (rainbow-delimiters-depth-1-face :foreground violet)
@@ -143,7 +143,7 @@ Can be an integer to determine the exact padding."
    (vterm-color-magenta :foreground magenta :background violet)
    (vterm-color-white :foreground "#e7e7e7" :background "#f5f5f5")
 
-   ;; org-mode								
+   ;; org-mode
    ;; ((outline-1 &override) :foreground level1)
    ;; (outline-2 :inherit 'outline-1 :foreground level2)
    ;; (outline-3 :inherit 'outline-1 :foreground level3)
