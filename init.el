@@ -2,7 +2,7 @@
 
 (add-hook 'emacs-startup-hook
 	  (lambda ()
-	    (setq gc-cons-threshold (expt 2 23))))
+	    (setq gc-cons-threshold (* 2 1000 1000))))
 
 ;; startup time - stolen directly from efs
 ;; (defun hades/display-startup-time ()
@@ -76,11 +76,13 @@
 		vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
-(setq explicit-shell-file-name "/bin/bash")
-
 ;; prog mode reset
+(setq-default tab-width 4)
 (setq-default truncate-lines t)
+(setq-default indent-tabs-mode nil)
+(setq indent-line-function 'insert-tab)
 (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
+(add-hook 'prog-mode-hook (lambda () (setq indent-tabs-mode nil)))
 
 ;; Init use-package on non-linux. we need this for macbook :/
 (unless (package-installed-p 'use-package)
@@ -107,6 +109,9 @@
 	 :map ivy-reverse-i-search-map
 	 ("C-k" . ivy-previous-line)
 	 ("C-d" . ivy-reverse-i-search-kill))
+  :custom
+  (ivy-use-virtual-buffers t)
+  (ivy-count-format "(%d/%d) ")
   :config
   (ivy-mode 1))
 
@@ -123,7 +128,8 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom (
-	   (doom-modeline-height 40)))
+	   (doom-modeline-height 40)
+	   ))
 (use-package hide-mode-line)
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
@@ -269,12 +275,14 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
 
 ;; buffer hydra
 (defhydra hydra-buffers (:exit t :idle 1 :timeout 2)
-  ("b" counsel-switch-buffer "change buffer")
-  ("k" kill-this-buffer "kill da buffer")
-  ("n" next-buffer "next buffer")
-  ("l" previous-buffer "prev buffer")
+  ("b" counsel-switch-buffer              "change buffer")
+  ("k" kill-this-buffer                   "kill da buffer")
+  ("n" next-buffer                        "next buffer")
+  ("l" previous-buffer                    "prev buffer")
   ("o" evil-switch-to-windows-last-buffer "last buffer")
-  ("m" list-bookmarks "bookmarks"))
+  ("c" clone-indirect-buffer              "clone buffer")
+  ("s" clone-indirect-buffer-other-window "split buffer")
+  ("m" counsel-bookmark                   "bookmarks"))
 
 ;; window management hydra
 (defhydra hydra-windows (:exit t :idle 1.5 :timeout 3 :hint nil)
@@ -311,14 +319,27 @@ _h_   _l_   _n_ew       _-_ dec height
   (setq vterm-kill-buffer-on-exit t)
   (setq vterm-max-scrollback 5000))
 
-(add-to-list 'display-buffer-alist
-             '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
-               (display-buffer-in-side-window (side . bottom))))
+;; (add-to-list 'display-buffer-alist
+;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
+;;                (display-buffer-in-side-window (side . bottom))))
 
 (add-hook 'vterm-mode-hook
 	  (lambda ()
 	    (setq config-kill-processes nil)
-	    (setq hscroll-margin 0)))
+	    (setq hscroll-margin 0)
+            (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
+            (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
+            (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
+            (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
+            ))
+
+;; (cl-loop for file in '("/usr/local/bin/zsh" "/bin/zsh")
+;;         when (file-exists-p file)
+;;         do (progn
+;;             (setq shell-file-name file)
+;;             (cl-return)))
+;; (setenv "SHELL" shell-file-name)
+
 
 ;; projectile
 (use-package projectile
@@ -372,25 +393,26 @@ _h_   _l_   _n_ew       _-_ dec height
   (plist-put org-format-latex-options :scale 1.4)
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 100)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 100)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 100)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 100)
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 100)
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 100)
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 100))
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 130))
 
 (use-package org
   :pin org
   :hook (org-mode . hades/org-init)
   :config
   (hades/org-fonts)
+  (add-to-list 'org-modules 'org-tempo)
   :custom
   (org-capture-bookmark nil)
   (org-hide-emphasis-markers t)
-  (org-agenda-files '("~/Notes/Tasks.org")))
+  (org-agenda-files '("~/Documents/Notes/Tasks.org")))
 
 (general-def 'normal org-mode-map
   "RET" 'org-open-at-point)
@@ -409,7 +431,7 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package org-roam
   :custom
-  (org-roam-directory "~/Notes/Roam")
+  (org-roam-directory "~/Documents/Notes/Roam")
   :config
   (hades/leader-keys "n" '(:keymap hades/roam-map :package org-roam))
   (org-roam-setup))
@@ -467,7 +489,10 @@ _h_   _l_   _n_ew       _-_ dec height
 (defun hades/dired-init ()
   "Bunch of stuff to run for dired, either immediately or when it's
    loaded."
-  ;; <add other stuff here>
+  ;; <add other stuff here>:config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-single-up-directory
+    "l" 'dired-single-buffer)
   (evil-collection-define-key 'normal 'dired-mode-map [remap dired-find-file]
     'dired-single-buffer)
   (evil-collection-define-key 'normal 'dired-mode-map [remap dired-mouse-find-file-other-window]
@@ -477,7 +502,8 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package dired
   :ensure nil
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :custom ((insert-directory-program "gls" dired-use-ls-dired t)
+	   (dired-listing-switches "-agho --group-directories-first"))
   :config (hades/dired-init))
 
 (use-package dired-single)
@@ -509,15 +535,19 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (hades/leader-keys
   "SPC" '(hades/find-file :which-key "dynamic file-find")
+  "." '(find-file :which-key "file finder")
   "/" '(projectile-ripgrep :which-key "rg nyoom")
 
   ";" '(counsel-M-x :which-key "M-x")
   "b" '(hydra-buffers/body :which-key "buffer commands")
   "w" '(hydra-windows/body :which-key "window management")
   "nn" '(comment-dwim :which-key "comment toggle")
-  "." '(find-file :which-key "file finder")
   "p" '(:keymap projectile-command-map :which-key "projects")
+
   "gg" '(magit-status :which-key "magit")
+  "gb" '(magit-blame :which-key "whodunnit")
+  "gi" '(vc-annotate :which-key "investigate")
+
   "ce" '(lsp :which-key "lsp-enable"))
 
 ;; text-scaling
@@ -537,13 +567,14 @@ _h_   _l_   _n_ew       _-_ dec height
 (setq user-full-name "Pradyun Narkadamilli"
       user-mail-address "pradyungn@gmail.com")
 
-(setq org-directory "~/Notes/")
+(setq org-directory "~/Documents/Notes/")
 
 ;; other random settings
 (setq undo-limit 80000000
       evil-want-fine-undo t)
 
 (delete-selection-mode 1)
+(setq backup-directory-alist `(("." . "~/.saves")))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
