@@ -119,6 +119,7 @@
 
 ;; Doom modeline with icons
 (use-package all-the-icons)
+(use-package nerd-icons)
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom (
@@ -440,7 +441,6 @@ _h_   _l_   _n_ew       _-_ dec height
 
 ;; dashboard
 (use-package dashboard
-  :pin manual
   :config
   (dashboard-setup-startup-hook)
   :custom
@@ -449,6 +449,8 @@ _h_   _l_   _n_ew       _-_ dec height
   (dashboard-center-content t)
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
+  (dashboard-display-icons-p t)
+  (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
   (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   (dashboard-items '((recents  . 5)
@@ -548,6 +550,8 @@ _h_   _l_   _n_ew       _-_ dec height
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
  '(package-selected-packages
    '(evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile all-the-icons-dired)))
 (custom-set-faces

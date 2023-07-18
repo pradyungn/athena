@@ -143,6 +143,11 @@ Can be an integer to determine the exact padding."
    (vterm-color-magenta :foreground magenta :background violet)
    (vterm-color-white :foreground "#e7e7e7" :background "#f5f5f5")
 
+   ;;;; markdown mode
+   (markdown-markup-face :foreground grey)
+   (markdown-header-face :inherit 'bold :foreground green)
+   ((markdown-code-face &override) :background base0 :foreground dark-blue)
+
    ;; org-mode
    ;; ((outline-1 &override) :foreground level1)
    ;; (outline-2 :inherit 'outline-1 :foreground level2)
