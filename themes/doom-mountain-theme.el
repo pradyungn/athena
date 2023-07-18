@@ -17,7 +17,7 @@
 
 (defcustom doom-mountain-padded-modeline doom-themes-padded-modeline
   "If non-nil, adds a 4px padding to the mode-line.
-Can be an integer to determine the exact padding."
+                        Can be an integer to determine the exact padding."
   :group 'doom-mountain-theme
   :type '(choice integer boolean))
 
@@ -109,12 +109,12 @@ Can be an integer to determine the exact padding."
    (-modeline-pad
     (when doom-mountain-padded-modeline
       (if (integerp doom-mountain-padded-modeline)
-	  doom-mountain-padded-modeline
-	4))))
+          doom-mountain-padded-modeline
+        4))))
 
   ;; --- faces ------------------------------
-  (((line-number &override) :foreground base4)
-   ((line-number-current-line &override) :foreground blue :bold bold)
+  (((line-number &override) :background bg :foreground base4)
+   ((line-number-current-line &override) :background bg :foreground blue :bold bold)
 
    (mode-line
     :background modeline-bg :foreground modeline-fg
@@ -123,7 +123,7 @@ Can be an integer to determine the exact padding."
     :background modeline-bg-alt :foreground modeline-fg-alt
     :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-alt)))
 
-	;;;; rainbow-delimiters
+   ;;;; rainbow-delimiters
    (rainbow-delimiters-depth-1-face :foreground violet)
    (rainbow-delimiters-depth-2-face :foreground blue)
    (rainbow-delimiters-depth-3-face :foreground orange)

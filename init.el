@@ -1,8 +1,8 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 (add-hook 'emacs-startup-hook
-	  (lambda ()
-	    (setq gc-cons-threshold (* 2 1000 1000))))
+	      (lambda ()
+	        (setq gc-cons-threshold (* 2 1000 1000))))
 
 ;; startup time - stolen directly from efs
 ;; (defun hades/display-startup-time ()
@@ -58,8 +58,8 @@
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+			             ("org" . "https://orgmode.org/elpa/")
+			             ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -70,10 +70,10 @@
 
 ;; disable line numbers if in a "writing" mode
 (dolist (mode '(org-mode-hook
-		term-mode-hook
-		dashboard-mode-hook
-		eshell-mode-hook
-		vterm-mode-hook))
+		        term-mode-hook
+		        dashboard-mode-hook
+		        eshell-mode-hook
+		        vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
 ;; prog mode reset
@@ -97,18 +97,18 @@
 (use-package ivy
   :diminish
   :bind (("C-s" . swiper)
-	 :map ivy-minibuffer-map
-	 ("TAB" . ivy-alt-done)
-	 ("C-l" . ivy-alt-done)
-	 ("C-j" . ivy-next-line)
-	 ("C-k" . ivy-previous-line)
-	 :map ivy-switch-buffer-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-l" . ivy-done)
-	 ("C-d" . ivy-switch-buffer-kill)
-	 :map ivy-reverse-i-search-map
-	 ("C-k" . ivy-previous-line)
-	 ("C-d" . ivy-reverse-i-search-kill))
+	     :map ivy-minibuffer-map
+	     ("TAB" . ivy-alt-done)
+	     ("C-l" . ivy-alt-done)
+	     ("C-j" . ivy-next-line)
+	     ("C-k" . ivy-previous-line)
+	     :map ivy-switch-buffer-map
+	     ("C-k" . ivy-previous-line)
+	     ("C-l" . ivy-done)
+	     ("C-d" . ivy-switch-buffer-kill)
+	     :map ivy-reverse-i-search-map
+	     ("C-k" . ivy-previous-line)
+	     ("C-d" . ivy-reverse-i-search-kill))
   :custom
   (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) ")
@@ -128,13 +128,13 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom (
-	   (doom-modeline-height 40)
-	   ))
+	       (doom-modeline-height 40)
+	       ))
 (use-package hide-mode-line)
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
-					;(setq user-emacs-directory "~/.cache/emacs")
+;; (setq user-emacs-directory "~/.cache/emacs")
 
 (use-package no-littering)
 
@@ -157,10 +157,10 @@
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-	 ("C-x b" . counsel-ibuffer)
-	 ("C-x C-f" . counsel-find-file)
-	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history)))
+	     ("C-x b" . counsel-ibuffer)
+	     ("C-x C-f" . counsel-find-file)
+	     :map minibuffer-local-map
+	     ("C-r" . 'counsel-minibuffer-history)))
 
 ;; better help functions
 (use-package helpful
@@ -232,28 +232,28 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (when (window-dedicated-p)
     (user-error "Cannot swap a dedicated window"))
   (let* ((this-window (selected-window))
-	 (this-buffer (current-buffer))
-	 (that-window (windmove-find-other-window direction nil this-window))
-	 (that-buffer (window-buffer that-window)))
+	     (this-buffer (current-buffer))
+	     (that-window (windmove-find-other-window direction nil this-window))
+	     (that-buffer (window-buffer that-window)))
     (when (or (minibufferp that-buffer)
-	      (window-dedicated-p this-window))
+	          (window-dedicated-p this-window))
       (setq that-buffer nil that-window nil))
     (if (not (or that-window (one-window-p t)))
-	(funcall (pcase direction
-		   ('left  #'evil-window-move-far-left)
-		   ('right #'evil-window-move-far-right)
-		   ('up    #'evil-window-move-very-top)
-		   ('down  #'evil-window-move-very-bottom)))
+	    (funcall (pcase direction
+		           ('left  #'evil-window-move-far-left)
+		           ('right #'evil-window-move-far-right)
+		           ('up    #'evil-window-move-very-top)
+		           ('down  #'evil-window-move-very-bottom)))
       (unless that-window
-	(setq that-window
-	      (split-window this-window nil
-			    (pcase direction
-			      ('up 'above)
-			      ('down 'below)
-			      (_ direction))))
-	(with-selected-window that-window
-	  (switch-to-buffer (doom-fallback-buffer)))
-	(setq that-buffer (window-buffer that-window)))
+	    (setq that-window
+	          (split-window this-window nil
+			                (pcase direction
+			                  ('up 'above)
+			                  ('down 'below)
+			                  (_ direction))))
+	    (with-selected-window that-window
+	      (switch-to-buffer (doom-fallback-buffer)))
+	    (setq that-buffer (window-buffer that-window)))
       (window-swap-states this-window that-window)
       (select-window that-window))))
 
@@ -324,9 +324,9 @@ _h_   _l_   _n_ew       _-_ dec height
 ;;                (display-buffer-in-side-window (side . bottom))))
 
 (add-hook 'vterm-mode-hook
-	  (lambda ()
-	    (setq config-kill-processes nil)
-	    (setq hscroll-margin 0)
+	      (lambda ()
+	        (setq config-kill-processes nil)
+	        (setq hscroll-margin 0)
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
@@ -358,7 +358,9 @@ _h_   _l_   _n_ew       _-_ dec height
 
 ;; auto-format
 (use-package format-all
-  :hook (prog-mode . format-all-mode))
+  :hook
+  (prog-mode . format-all-mode)
+  (format-all-mode . format-all-ensure-formatter))
 
 ;; magit
 (use-package magit
@@ -371,7 +373,7 @@ _h_   _l_   _n_ew       _-_ dec height
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
-	      ("C-c C-e" . markdown-do)))
+	          ("C-c C-e" . markdown-do)))
 
 ;; Verilog
 (use-package verilog-mode)
@@ -385,23 +387,23 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (defun hades/org-fonts ()
   (dolist (face '((org-level-1 . 1.5)
-		  (org-level-2 . 1.4)
-		  (org-level-3 . 1.2)
-		  (org-level-4 . 1.0)))
+		          (org-level-2 . 1.4)
+		          (org-level-3 . 1.2)
+		          (org-level-4 . 1.0)))
     (set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (cdr face)))
 
   (plist-put org-format-latex-options :scale 1.4)
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 130)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 130)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 130)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 130)
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 130)
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 130)
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 130))
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 100)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 100)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 100)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 100)
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 100)
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 100)
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 100))
 
 (use-package org
   :pin org
@@ -441,7 +443,7 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (defun hades/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
-	visual-fill-column-center-text t)
+	    visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
@@ -458,8 +460,8 @@ _h_   _l_   _n_ew       _-_ dec height
   )
 
 (font-lock-add-keywords 'org-mode
-			'(("^ *\\([-]\\) "
-			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+			            '(("^ *\\([-]\\) "
+			               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 ;; dashboard
 (use-package dashboard
@@ -476,14 +478,14 @@ _h_   _l_   _n_ew       _-_ dec height
   (dashboard-projects-backend 'projectile)
   (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
   (dashboard-items '((recents  . 5)
-		     (bookmarks . 3)
-		     (projects . 3)
-		     (agenda . 3))))
+		             (bookmarks . 3)
+		             (projects . 3)
+		             (agenda . 3))))
 
 ;; dashboard hook doesn't really work
 (setq initial-buffer-choice (lambda ()
-			      (get-buffer-create "*dashboard*")
-			      (dashboard-refresh-buffer)))
+			                  (get-buffer-create "*dashboard*")
+			                  (dashboard-refresh-buffer)))
 
 ;; dired customization ... stolen from EFS and dired-single docs
 (defun hades/dired-init ()
@@ -502,8 +504,7 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package dired
   :ensure nil
-  :custom ((insert-directory-program "gls" dired-use-ls-dired t)
-	   (dired-listing-switches "-agho --group-directories-first"))
+  :custom ((dired-listing-switches "-agho --group-directories-first"))
   :config (hades/dired-init))
 
 (use-package dired-single)
@@ -517,11 +518,29 @@ _h_   _l_   _n_ew       _-_ dec height
   (all-the-icons-dired-monochrome nil))
 
 ;; LSP stuff
+(defun hades/lsp-init ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode)
+  (general-define-key
+   :keymaps 'local
+   :states '(normal visual) :prefix "SPC"
+   "c" '(:keymap lsp-command-map :which-key "lsp")))
+
 (use-package lsp-mode
   :defer t
   :commands (lsp lsp-deferred)
+  :hook (lsp-mode . hades/lsp-init)
   :config
   (lsp-enable-which-key-integration t))
+
+(use-package lsp-ui
+  :hook (lsp-mode . lsp-ui-mode))
+
+(use-package lsp-treemacs
+  :after lsp)
+
+(use-package lsp-ivy
+  :after lsp)
 
 ;; assembling leader-based keybinds
 (defun hades/find-file ()
@@ -556,10 +575,6 @@ _h_   _l_   _n_ew       _-_ dec height
 (general-define-key
  "C-=" 'text-scale-increase)
 
-;; fun binds
-(general-define-key
- "M-w" 'counsel-switch-buffer :which-key "windows")
-
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
 
@@ -582,9 +597,10 @@ _h_   _l_   _n_ew       _-_ dec height
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
+   '("5a616566cd92da30acd38f0c403e46e214301651db2a66c4062c7801adc7d24b" "1a1ac598737d0fcdc4dfab3af3d6f46ab2d5048b8e72bc22f50271fd6d393a00" "0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
  '(package-selected-packages
-   '(evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile all-the-icons-dired)))
+   '(evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile all-the-icons-dired))
+ '(warning-suppress-types '((emacs) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
