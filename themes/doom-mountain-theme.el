@@ -148,7 +148,7 @@
    (markdown-header-face :inherit 'bold :foreground green)
    ((markdown-code-face &override) :background base0 :foreground dark-blue)
 
-   ;; org-mode
+   ;;;; org-mode
    ;; ((outline-1 &override) :foreground level1)
    ;; (outline-2 :inherit 'outline-1 :foreground level2)
    ;; (outline-3 :inherit 'outline-1 :foreground level3)

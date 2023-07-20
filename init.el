@@ -73,7 +73,8 @@
 		        term-mode-hook
 		        dashboard-mode-hook
 		        eshell-mode-hook
-		        vterm-mode-hook))
+		        vterm-mode-hook
+                treemacs-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
 ;; prog mode reset
@@ -122,9 +123,11 @@
   :config
   (doom-themes-org-config))
 
-;; Doom modeline with icons
+;; Icons
 (use-package all-the-icons)
 (use-package nerd-icons)
+
+;; Doom modeline
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom (
@@ -546,6 +549,12 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package lsp-treemacs
   :after lsp)
+
+;; (defun hades/treemacs-init ()
+;;   (treemacs-load-theme "nerd-icons"))
+
+;; (use-package treemacs-nerd-icons
+;;   :hook (treemacs-mode . hades/treemacs-init))
 
 (use-package lsp-ivy
   :after lsp)
