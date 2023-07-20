@@ -16,6 +16,7 @@
 
 ;; shut up emacs ;-;
 (setq inhibit-startup-message t)
+(setq auto-revert-verbose nil)
 (setq ring-bell-function 'ignore)
 
 (scroll-bar-mode -1) ;; no scrollbar
@@ -31,9 +32,9 @@
 (load-theme 'wombat t)
 
 ;; fonts
-(set-face-attribute 'default nil :font "Iosevka" :height 90)
-(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 90)
-(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 115 :weight 'regular)
+(set-face-attribute 'default nil :font "Iosevka" :height 120)
+(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 120)
+(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 160 :weight 'regular)
 
 ;; (on-platform-do (osx (set-face-attribute 'default nil :font "Fira Mono" :height 12))
 ;; 				(linux ))
@@ -117,7 +118,7 @@
   (ivy-mode 1))
 
 ;; enable doom theme
-(add-to-list 'custom-theme-load-path "/home/pradyungn/Documents/emacs.hades/themes/")
+(add-to-list 'custom-theme-load-path "~/.emacs.legacy/themes")
 (use-package doom-themes
   :init (load-theme 'doom-mountain t)
   :config
@@ -326,6 +327,11 @@ _h_   _l_   _n_ew       _-_ dec height
 ;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
 ;;                (display-buffer-in-side-window (side . bottom))))
 
+(use-package tramp
+  :ensure nil
+  :config
+  (add-to-list 'tramp-remote-path "~/.local/bin"))
+
 (add-hook 'vterm-mode-hook
 	      (lambda ()
 	        (setq config-kill-processes nil)
@@ -360,7 +366,16 @@ _h_   _l_   _n_ew       _-_ dec height
 (exec-path-from-shell-initialize)
 
 ;; auto-format
+;; (defun hades/format-ensure ()
+;;   (let (inhibit-message t)
+;;     (format-all-ensure-formatter)))
+
 (use-package format-all
+  ;; :init
+  ;; (custom-set-variables
+  ;;  '(format-all-default-formatters
+  ;;    (quote
+  ;;     ("Verilog" verible))))
   :hook
   (prog-mode . format-all-mode)
   (format-all-mode . format-all-ensure-formatter))
@@ -398,18 +413,15 @@ _h_   _l_   _n_ew       _-_ dec height
   (plist-put org-format-latex-options :scale 1.4)
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 100)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 100)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 100)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 100)
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 100)
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 100)
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 100)
-
-  (setq org-todo-keywords
-        '((sequence "TODO" "|" "DONE") (sequence "STALE" "|") (sequence "REQUIRED" "IP" "|" "DONE"))))
+  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 130))
 
 (use-package org
   :pin org
@@ -515,7 +527,8 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package dired
   :ensure nil
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :custom ((insert-directory-program "gls" dired-use-ls-dired t)
+	       (dired-listing-switches "-agho --group-directories-first"))
   :config (hades/dired-init))
 
 (use-package dired-single)
@@ -542,7 +555,12 @@ _h_   _l_   _n_ew       _-_ dec height
   :commands (lsp lsp-deferred)
   :hook (lsp-mode . hades/lsp-init)
   :config
-  (lsp-enable-which-key-integration t))
+  (lsp-enable-which-key-integration t)
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-tramp-connection "clangd")
+                    :major-modes '(c++-mode c-mode)
+                    :remote? t
+                    :server-id 'clangd-remote)))
 
 (use-package lsp-ui
   :hook (lsp-mode . lsp-ui-mode))
@@ -605,7 +623,8 @@ _h_   _l_   _n_ew       _-_ dec height
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("d225c008d53d789cdd96e5f3f1a1be77f1eeb4883a82f6345c2a2782bc603275" "603876c8fe23371998d7aa13dc488fd6cb6167f2a74ae9db46ffdf6987d90018" "6d4309dd9dcab7cbb8fd8cb3982273d7923e8aea903a397eacf042e1ed4473f4" "e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "f64189544da6f16bab285747d04a92bd57c7e7813d8c24c30f382f087d460a33" "5a616566cd92da30acd38f0c403e46e214301651db2a66c4062c7801adc7d24b" "1a1ac598737d0fcdc4dfab3af3d6f46ab2d5048b8e72bc22f50271fd6d393a00" "0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
+   '("839eb13d3bea7008551cb032e1445badd3bb4e2d86610718f6c3ad189bd6147b" "5a616566cd92da30acd38f0c403e46e214301651db2a66c4062c7801adc7d24b" "1a1ac598737d0fcdc4dfab3af3d6f46ab2d5048b8e72bc22f50271fd6d393a00" "0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
+ '(org-agenda-files nil nil nil "Customized with use-package org")
  '(package-selected-packages
    '(evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile all-the-icons-dired))
  '(warning-suppress-types '((emacs) (comp))))
