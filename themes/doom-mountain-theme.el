@@ -157,7 +157,7 @@
    ;; (outline-6 :inherit 'outline-1 :foreground level6)
    ;; (outline-7 :inherit 'outline-1 :foreground level7)
 
-   (org-todo :foreground yellow :bold 'inherit :background (doom-darken base0 0.02))
+   (org-todo :foreground yellow :bold 'inherit)
    (org-done :foreground green :strike-through nil :bold t)
    (org-headline-done :foreground base3 :strike-through nil)
    ((org-tag &override) :foreground orange)

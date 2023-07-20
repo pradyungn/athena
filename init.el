@@ -403,7 +403,10 @@ _h_   _l_   _n_ew       _-_ dec height
   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 100)
   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 100)
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 100))
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 100)
+
+  (setq org-todo-keywords
+        '((sequence "TODO" "|" "DONE") (sequence "STALE" "|") (sequence "REQUIRED" "IP" "|" "DONE"))))
 
 (use-package org
   :pin org
@@ -414,7 +417,12 @@ _h_   _l_   _n_ew       _-_ dec height
   :custom
   (org-capture-bookmark nil)
   (org-hide-emphasis-markers t)
-  (org-agenda-files '("~/Documents/Notes/Tasks.org")))
+  (org-agenda-files '("~/Documents/Notes/Tasks.org"))
+  (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
+                            ("IP" . org-todo)
+                            ("TODO" . org-todo)
+                            ("DONE" . org-done)
+                            ("STALE" . "#8aacab"))))
 
 (general-def 'normal org-mode-map
   "RET" 'org-open-at-point)
