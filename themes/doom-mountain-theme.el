@@ -165,7 +165,7 @@
    (org-agenda-dimmed-todo-face :foreground comments)
    (org-agenda-done :foreground base3)
    (org-agenda-structure :foreground red)
-   ((org-block &override) :background base0 :foreground dark-blue)
+   ((org-block &override) :background base0)
    ((org-block-begin-line &override) :background base0 :foreground comments)
    (org-code :foreground yellow)
    (org-column :background base1)
