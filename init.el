@@ -16,6 +16,7 @@
 
 ;; shut up emacs ;-;
 (setq inhibit-startup-message t)
+(setq auto-revert-verbose nil)
 (setq ring-bell-function 'ignore)
 
 (scroll-bar-mode -1) ;; no scrollbar
@@ -362,9 +363,14 @@ _h_   _l_   _n_ew       _-_ dec height
 (exec-path-from-shell-initialize)
 
 ;; auto-format
+(setq hades/format-on-write-enable 1)
+(defun hades/format-hook ()
+  (if (> hades/format-on-write-enable 0)
+      (format-all-mode)))
+
 (use-package format-all
   :hook
-  (prog-mode . format-all-mode)
+  (prog-mode . hades/format-hook)
   (format-all-mode . format-all-ensure-formatter))
 
 ;; magit
@@ -560,28 +566,40 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (byte-compile 'hades/find-file)
 
+(defun hades/global-format-toggle ()
+  (interactive)
+  (setq hades/format-on-write-enable (* -1 hades/format-on-write-enable))
+  (message (format "Formatting is %s for new buffers."
+                   (if (> hades/format-on-write-enable 0) "enabled" "disabled"))))
+
 (hades/leader-keys
   "SPC" '(hades/find-file :which-key "dynamic file-find")
   "." '(find-file :which-key "file finder")
   "/" '(projectile-ripgrep :which-key "rg nyoom")
 
   ";" '(counsel-M-x :which-key "M-x")
+
   "b" '(hydra-buffers/body :which-key "buffer commands")
   "w" '(hydra-windows/body :which-key "window management")
-  "nn" '(comment-dwim :which-key "comment toggle")
   "p" '(:keymap projectile-command-map :which-key "projects")
 
   "gg" '(magit-status :which-key "magit")
   "gb" '(magit-blame :which-key "whodunnit")
   "gi" '(vc-annotate :which-key "investigate")
 
-  "ce" '(lsp :which-key "lsp-enable"))
+  "ce" '(lsp :which-key "lsp-enable")
+
+  "fn" '(comment-dwim :which-key "comment toggle")
+  "ff" '(hades/global-format-toggle :which-key "global format toggle")
+  "fa" '(align-regexp :which-key "align"))
 
 ;; text-scaling
 (general-define-key
  "C--" 'text-scale-decrease)
 (general-define-key
  "C-=" 'text-scale-increase)
+(general-define-key
+ "M-;" 'shell-command)
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
