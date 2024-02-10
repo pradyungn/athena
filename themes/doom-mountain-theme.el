@@ -133,15 +133,15 @@
    (rainbow-delimiters-depth-7-face :foreground teal)
 
    ;; vterm
-   (vterm-color-default :foreground fg :background bg)
-   (vterm-color-black :foreground base2 :background grey)
-   (vterm-color-green :foreground green :background teal)
-   (vterm-color-cyan :foreground dark-cyan :background cyan)
-   (vterm-color-red :foreground red :background scream )
-   (vterm-color-yellow :foreground yellow :background "#c4c19e")
-   (vterm-color-blue :foreground dark-blue :background blue)
-   (vterm-color-magenta :foreground magenta :background violet)
-   (vterm-color-white :foreground "#e7e7e7" :background "#f5f5f5")
+   (vterm-color-default :foreground fg        :background bg)
+   (vterm-color-black   :foreground base2     :background grey)
+   (vterm-color-green   :foreground green     :background teal)
+   (vterm-color-cyan    :foreground dark-cyan :background cyan)
+   (vterm-color-red     :foreground red       :background scream )
+   (vterm-color-yellow  :foreground yellow    :background "#c4c19e")
+   (vterm-color-blue    :foreground violet    :background "#a39ec4")
+   (vterm-color-magenta :foreground magenta   :background "#c39ec4")
+   (vterm-color-white   :foreground "#e7e7e7" :background "#f5f5f5")
 
    ;;;; markdown mode
    (markdown-markup-face :foreground grey)

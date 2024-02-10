@@ -31,13 +31,16 @@
 ;; default font - if mountain fails, don't want to be blinded
 (load-theme 'wombat t)
 
-;; fonts
-(set-face-attribute 'default nil :font "Iosevka" :height 105 :weight 'semibold)
-(set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 105 :weight 'medium)
-(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 135 :weight 'medium)
+;; font scaling - allows for standardized font sizing
+(setq face-font-rescale-alist
+      '(
+        (".*EB Garamond.*" . 1.285)
+        ))
 
-;; (on-platform-do (osx (set-face-attribute 'default nil :font "Fira Mono" :height 12))
-;; 				(linux ))
+;; fonts
+(set-face-attribute 'default nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
+(set-face-attribute 'fixed-pitch nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
+(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 130 :weight 'regular)
 
 ;; prevent resize window on startup
 (setq frame-inhibit-implied-resize t)
@@ -117,8 +120,11 @@
   :config
   (ivy-mode 1))
 
+(general-def ivy-mode-map
+  "C-;" 'ivy-immediate-done)
+
 ;; enable doom theme
-(add-to-list 'custom-theme-load-path "/home/pradyungn/.emacs.d/themes/")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (use-package doom-themes
   :init (load-theme 'doom-mountain t)
   :config
@@ -202,7 +208,9 @@
 
 (use-package evil-snipe
   :after evil
-  :hook (prog-mode . (lambda () (evil-snipe-local-mode +1))))
+  :hook
+  (prog-mode . (lambda () (evil-snipe-local-mode +1)))
+  (org-mode . (lambda () (evil-snipe-local-mode +1))))
 
 (use-package evil-surround
   :after evil
@@ -329,6 +337,7 @@ _h_   _l_   _n_ew       _-_ dec height
 ;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
 ;;                (display-buffer-in-side-window (side . bottom))))
 
+(setq tramp-verbose 10)
 (add-hook 'vterm-mode-hook
 	      (lambda ()
 	        (setq config-kill-processes nil)
@@ -366,28 +375,56 @@ _h_   _l_   _n_ew       _-_ dec height
 (setq hades/format-on-write-enable 1)
 (defun hades/format-hook ()
   (if (> hades/format-on-write-enable 0)
-      (format-all-mode)))
+      (apheleia-mode)))
 
-(use-package format-all
+(use-package apheleia
   :hook
-  (prog-mode . hades/format-hook)
-  (format-all-mode . format-all-ensure-formatter))
+  (prog-mode . hades/format-hook))
 
 ;; magit
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package magit-delta
+  :hook (magit-mode . magit-delta-mode))
+
 ;; markdown
 (use-package markdown-mode
   :defer t
   :mode ("README\\.md\\'" . gfm-mode)
+  :hook (markdown-mode . visual-line-mode)
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
 	          ("C-c C-e" . markdown-do)))
 
+;; Outlining for org mode
+(use-package outshine)
+
 ;; Verilog
 (use-package verilog-mode)
+
+;; disabled while not properly configured
+;; (use-package verilog-ext
+;;   :custom
+;;   (verilog-ext-feature-list
+;;       '(font-lock
+;;         xref
+;;         hierarchy
+;;         navigation
+;;         template
+;;         hideshow
+;;         typedefs
+;;         time-stamp
+;;         block-end-comments
+;;         ports))
+;;   (verilog-ext-tags-backend 'tree-sitter)
+;;   (verilog-ext-hierarchy-backend 'tree-sitter)
+;;   (verilog-ext-hierarchy-frontend 'hierarchy)
+;;   :config
+;;   (verilog-ext-mode-setup)
+;;   :hook
+;;   (verilog-mode . verilog-ext-mode))
 
 ;; org mode!!
 (defun hades/org-init ()
@@ -398,23 +435,23 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (defun hades/org-fonts ()
   (dolist (face '((org-level-1 . 1.5)
-		          (org-level-2 . 1.4)
+		          (org-level-2 . 1.35)
 		          (org-level-3 . 1.2)
 		          (org-level-4 . 1.0)))
-    (set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (cdr face)))
+    (set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (* 1.4 (cdr face))))
 
   (plist-put org-format-latex-options :scale 1)
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground nil :inherit 'fixed-pitch :height 115)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 115)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 115)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 115)
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 115)
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 115)
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 115)
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 115)
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 115)
+  (set-face-attribute 'org-block nil    :foreground 'unspecified :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 130)
+  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 130)
+  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
+  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
+  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 130)
 
   (setq org-todo-keywords
         '((sequence "TODO" "|" "DONE") (sequence "STALE" "|") (sequence "REQUIRED" "IP" "|" "DONE"))))
@@ -425,40 +462,32 @@ _h_   _l_   _n_ew       _-_ dec height
   :config
   (hades/org-fonts)
   (add-to-list 'org-modules 'org-tempo)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)))
   :custom
   (org-capture-bookmark nil)
+  (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
-  (org-agenda-files '("~/Documents/Notes/Tasks.org"))
+  (org-babel-python-command "python3")
+  ;; (org-agenda-files '("~/Documents/Notes/Tasks.org"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
                             ("IP" . org-todo)
                             ("TODO" . org-todo)
                             ("DONE" . org-done)
-                            ("STALE" . "#8aacab"))))
+                            ("STALE" . "#8aacab")))
+  (org-latex-logfiles-extensions
+   (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))))
 
 (general-def 'normal org-mode-map
-  "RET" 'org-open-at-point)
+  "RET"    'org-open-at-point
+  "SPC op" '(org-latex-export-to-pdf :which-key "org pdf"))
 
 ;; Aesthetics :)
 (setq org-startup-folded t)
 
-;; org-roam setup
-(defvar hades/roam-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map "l" 'org-roam-buffer-toggle)
-    (define-key map "f" 'org-roam-node-find)
-    (define-key map "i" 'org-roam-node-insert)
-    map)
-  "roam keymap")
-
-(use-package org-roam
-  :custom
-  (org-roam-directory "~/Documents/Notes/Roam")
-  :config
-  (hades/leader-keys "n" '(:keymap hades/roam-map :package org-roam))
-  (org-roam-setup))
-
 ;; weird pdflatex bug
-(setq org-latex-pdf-process '("pdflatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+(setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 (defun hades/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -478,6 +507,23 @@ _h_   _l_   _n_ew       _-_ dec height
    '("\u200b"))
   )
 
+;; org-roam setup
+(defvar hades/roam-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "l" 'org-roam-buffer-toggle)
+    (define-key map "f" 'org-roam-node-find)
+    (define-key map "i" 'org-roam-node-insert)
+    map)
+  "roam keymap")
+
+(use-package org-roam
+  :custom
+  (org-roam-directory "~/Documents/Notes/Roam")
+  :config
+  (hades/leader-keys "n" '(:keymap hades/roam-map :package org-roam))
+  (org-roam-setup))
+
+
 (font-lock-add-keywords 'org-mode
 			            '(("^ *\\([-]\\) "
 			               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
@@ -493,6 +539,7 @@ _h_   _l_   _n_ew       _-_ dec height
   (dashboard-set-heading-icons t)
   (dashboard-set-file-icons t)
   (dashboard-display-icons-p t)
+  (dashboard-vertically-center-content t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
   (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
@@ -523,7 +570,8 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package dired
   :ensure nil
-  :custom ((dired-listing-switches "-agho --group-directories-first"))
+  :custom ((insert-directory-program "gls" dired-use-ls-dired t)
+           (dired-listing-switches "-agho --group-directories-first"))
   :config (hades/dired-init))
 
 (use-package dired-single)
@@ -534,27 +582,26 @@ _h_   _l_   _n_ew       _-_ dec height
   :hook
   (dired-mode . nerd-icons-dired-mode))
 
-;; LSP stuff
-(defun hades/lsp-init ()
-  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-  (lsp-headerline-breadcrumb-mode)
-  (general-define-key
-   :keymaps 'local
-   :states '(normal visual) :prefix "SPC"
-   "c" '(:keymap lsp-command-map :which-key "lsp")))
+;; search
+(use-package rg)
 
-(use-package lsp-mode
-  :defer t
-  :commands (lsp lsp-deferred)
-  :hook (lsp-mode . hades/lsp-init)
+;; Konchantrate
+(use-package darkroom)
+
+;; snippets (v useful)
+(use-package yasnippet-snippets)
+(use-package yasnippet
   :config
-  (lsp-enable-which-key-integration t))
+  (yas-global-mode 1))
 
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode))
-
-(use-package lsp-ivy
-  :after lsp)
+;; auctex
+(use-package tex
+  :ensure auctex
+  :custom
+  (TeX-engine 'luatex)
+  (TeX-PDF-mode t))
+(general-def 'normal TeX-mode-map
+  "SPC op" '(TeX-command-master :which-key "pdf export"))
 
 ;; assembling leader-based keybinds
 (defun hades/find-file ()
@@ -574,6 +621,7 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (hades/leader-keys
   "SPC" '(hades/find-file :which-key "dynamic file-find")
+  "," '(swiper :which-key "better search")
   "." '(find-file :which-key "file finder")
   "/" '(projectile-ripgrep :which-key "rg nyoom")
 
@@ -587,18 +635,18 @@ _h_   _l_   _n_ew       _-_ dec height
   "gb" '(magit-blame :which-key "whodunnit")
   "gi" '(vc-annotate :which-key "investigate")
 
-  "ce" '(lsp :which-key "lsp-enable")
-
   "fn" '(comment-dwim :which-key "comment toggle")
   "ff" '(hades/global-format-toggle :which-key "global format toggle")
-  "fa" '(align-regexp :which-key "align"))
+  "fa" '(align-regexp :which-key "align")
+
+  "ot" '(vterm :which-key "term")
+  "oz" '(darkroom-mode :which-key "zen")
+  )
 
 ;; text-scaling
 (general-define-key
- "C--" 'text-scale-decrease)
-(general-define-key
- "C-=" 'text-scale-increase)
-(general-define-key
+ "C--" 'text-scale-decrease
+ "C-=" 'text-scale-increase
  "M-;" 'shell-command)
 
 ;; Make gc pauses faster by decreasing the threshold.
@@ -625,7 +673,7 @@ _h_   _l_   _n_ew       _-_ dec height
  '(custom-safe-themes
    '("d225c008d53d789cdd96e5f3f1a1be77f1eeb4883a82f6345c2a2782bc603275" "603876c8fe23371998d7aa13dc488fd6cb6167f2a74ae9db46ffdf6987d90018" "6d4309dd9dcab7cbb8fd8cb3982273d7923e8aea903a397eacf042e1ed4473f4" "e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "f64189544da6f16bab285747d04a92bd57c7e7813d8c24c30f382f087d460a33" "5a616566cd92da30acd38f0c403e46e214301651db2a66c4062c7801adc7d24b" "1a1ac598737d0fcdc4dfab3af3d6f46ab2d5048b8e72bc22f50271fd6d393a00" "0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
  '(package-selected-packages
-   '(evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile))
+   '(auctex eglot darkroom zen-mode rg openwith evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile))
  '(warning-suppress-types '((emacs) (comp))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
