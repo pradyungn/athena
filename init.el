@@ -1,8 +1,8 @@
 (setq gc-cons-threshold most-positive-fixnum)
 
 (add-hook 'emacs-startup-hook
-	      (lambda ()
-	        (setq gc-cons-threshold (* 2 1000 1000))))
+	        (lambda ()
+	          (setq gc-cons-threshold (* 2 1000 1000))))
 
 ;; startup time - stolen directly from efs
 ;; (defun hades/display-startup-time ()
@@ -49,7 +49,7 @@
   ;; (set-face-attribute 'fixed-pitch nil :font "PragmataPro Mono Liga" :height 120 :weight 'light)
   (set-face-attribute 'default nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
   (set-face-attribute 'fixed-pitch nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
-  (set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 130 :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 125 :weight 'regular))
 
 ;; prevent resize window on startup
 (setq frame-inhibit-implied-resize t)
@@ -73,10 +73,10 @@
 
 ;; disable line numbers if in a "writing" mode
 (dolist (mode '(org-mode-hook
-		        term-mode-hook
-		        dashboard-mode-hook
-		        eshell-mode-hook
-		        vterm-mode-hook
+		            term-mode-hook
+		            dashboard-mode-hook
+		            eshell-mode-hook
+		            vterm-mode-hook
                 treemacs-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
@@ -98,8 +98,8 @@
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			             ("org" . "https://orgmode.org/elpa/")
-			             ("elpa" . "https://elpa.gnu.org/packages/")))
+			                   ("org" . "https://orgmode.org/elpa/")
+			                   ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 (unless package-archive-contents
@@ -118,17 +118,17 @@
 (use-package ivy
   :diminish
   :bind (:map ivy-minibuffer-map
-	          ("TAB" . ivy-alt-done)
-	          ("C-l" . ivy-alt-done)
-	          ("C-j" . ivy-next-line)
-	          ("C-k" . ivy-previous-line)
-	          :map ivy-switch-buffer-map
-	          ("C-k" . ivy-previous-line)
-	          ("C-l" . ivy-done)
-	          ("C-d" . ivy-switch-buffer-kill)
-	          :map ivy-reverse-i-search-map
-	          ("C-k" . ivy-previous-line)
-	          ("C-d" . ivy-reverse-i-search-kill))
+	            ("TAB" . ivy-alt-done)
+	            ("C-l" . ivy-alt-done)
+	            ("C-j" . ivy-next-line)
+	            ("C-k" . ivy-previous-line)
+	            :map ivy-switch-buffer-map
+	            ("C-k" . ivy-previous-line)
+	            ("C-l" . ivy-done)
+	            ("C-d" . ivy-switch-buffer-kill)
+	            :map ivy-reverse-i-search-map
+	            ("C-k" . ivy-previous-line)
+	            ("C-d" . ivy-reverse-i-search-kill))
   :custom
   (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) ")
@@ -152,9 +152,8 @@
 ;; Default Modeline
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :custom (
-	       (doom-modeline-height 40)
-	       (doom-modeline-bar-width 4)))
+  :custom ((doom-modeline-height 40)
+	         (doom-modeline-bar-width 4)))
 
 (use-package hide-mode-line)
 
@@ -182,10 +181,10 @@
 
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
-	     ("C-x b" . counsel-ibuffer)
-	     ("C-x C-f" . counsel-find-file)
-	     :map minibuffer-local-map
-	     ("C-r" . 'counsel-minibuffer-history)))
+	       ("C-x b" . counsel-ibuffer)
+	       ("C-x C-f" . counsel-find-file)
+	       :map minibuffer-local-map
+	       ("C-r" . 'counsel-minibuffer-history)))
 
 ;; better help functions
 (use-package helpful
@@ -259,28 +258,28 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (when (window-dedicated-p)
     (user-error "Cannot swap a dedicated window"))
   (let* ((this-window (selected-window))
-	     (this-buffer (current-buffer))
-	     (that-window (windmove-find-other-window direction nil this-window))
-	     (that-buffer (window-buffer that-window)))
+	       (this-buffer (current-buffer))
+	       (that-window (windmove-find-other-window direction nil this-window))
+	       (that-buffer (window-buffer that-window)))
     (when (or (minibufferp that-buffer)
-	          (window-dedicated-p this-window))
+	            (window-dedicated-p this-window))
       (setq that-buffer nil that-window nil))
     (if (not (or that-window (one-window-p t)))
-	    (funcall (pcase direction
-		           ('left  #'evil-window-move-far-left)
-		           ('right #'evil-window-move-far-right)
-		           ('up    #'evil-window-move-very-top)
-		           ('down  #'evil-window-move-very-bottom)))
+	      (funcall (pcase direction
+		               ('left  #'evil-window-move-far-left)
+		               ('right #'evil-window-move-far-right)
+		               ('up    #'evil-window-move-very-top)
+		               ('down  #'evil-window-move-very-bottom)))
       (unless that-window
-	    (setq that-window
-	          (split-window this-window nil
-			                (pcase direction
-			                  ('up 'above)
-			                  ('down 'below)
-			                  (_ direction))))
-	    (with-selected-window that-window
-	      (switch-to-buffer (doom-fallback-buffer)))
-	    (setq that-buffer (window-buffer that-window)))
+	      (setq that-window
+	            (split-window this-window nil
+			                      (pcase direction
+			                        ('up 'above)
+			                        ('down 'below)
+			                        (_ direction))))
+	      (with-selected-window that-window
+	        (switch-to-buffer (doom-fallback-buffer)))
+	      (setq that-buffer (window-buffer that-window)))
       (window-swap-states this-window that-window)
       (select-window that-window))))
 
@@ -412,7 +411,7 @@ _h_   _l_   _n_ew       _-_ dec height
   :hook (markdown-mode . visual-line-mode)
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
-	          ("C-c C-e" . markdown-do)))
+	            ("C-c C-e" . markdown-do)))
 
 ;; Outlining for org mode
 (use-package outshine)
@@ -451,9 +450,9 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (defun hades/org-fonts ()
   (dolist (face '((org-level-1 . 1.5)
-		          (org-level-2 . 1.35)
-		          (org-level-3 . 1.2)
-		          (org-level-4 . 1.0)))
+		              (org-level-2 . 1.35)
+		              (org-level-3 . 1.2)
+		              (org-level-4 . 1.0)))
     (set-face-attribute (car face) nil :font "Outfit" :weight 'bold :height (* 1.4 (cdr face))))
 
   (plist-put org-format-latex-options :scale 1)
@@ -510,7 +509,7 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (defun hades/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
-	    visual-fill-column-center-text t)
+	      visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
@@ -544,8 +543,8 @@ _h_   _l_   _n_ew       _-_ dec height
 
 
 (font-lock-add-keywords 'org-mode
-			            '(("^ *\\([-]\\) "
-			               (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+			                  '(("^ *\\([-]\\) "
+			                     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
 ;; dashboard
 (use-package dashboard
@@ -566,8 +565,8 @@ _h_   _l_   _n_ew       _-_ dec height
 
 ;; dashboard hook doesn't really work
 (setq initial-buffer-choice (lambda ()
-			                  (get-buffer-create "*dashboard*")
-			                  (dashboard-open)))
+			                        (get-buffer-create "*dashboard*")
+			                        (dashboard-open)))
 
 ;; dired customization ... stolen from EFS and dired-single docs
 (defun hades/dired-init ()
@@ -587,7 +586,8 @@ _h_   _l_   _n_ew       _-_ dec height
 (use-package dired
   :ensure nil
   :custom ((dired-listing-switches "-agho --group-directories-first")
-           (if (eq system-type darwin) (insert-directory-program "gls" dired-use-ls-dired t) nil))
+           (insert-directory-program (if (eq system-type 'darwin) "gls" "ls"))
+           (dired-use-ls-dired (eq system-type 'darwin)))
   :config (hades/dired-init))
 
 (use-package dired-single)
