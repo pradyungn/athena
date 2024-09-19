@@ -23,24 +23,33 @@
 (tool-bar-mode -1) ;; no toolbar
 (tooltip-mode -1) ;; no tooltips
 (menu-bar-mode -1) ;; no menu bar
+
+;; add some left/right padding for pane, don't show trunc arrows
+;; (fringe-mode '(15 . 15))
+;; (setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
 (fringe-mode 0)
 
 ;; horizontal splits by default
 (setq split-width-threshold nil)
 
 ;; default font - if mountain fails, don't want to be blinded
-(load-theme 'wombat t)
+;; (load-theme 'wombat t)
 
 ;; font scaling - allows for standardized font sizing
-(setq face-font-rescale-alist
-      '(
-        (".*EB Garamond.*" . 1.285)
-        ))
+(setq face-font-rescale-alist '((".*EB Garamond.*" . 1.285)))
 
 ;; fonts
-(set-face-attribute 'default nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
-(set-face-attribute 'fixed-pitch nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
-(set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 130 :weight 'regular)
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Myosevka Semi-Condensed" :height 110 :weight 'regular)
+  (set-face-attribute 'fixed-pitch nil :font "Myosevka Semi-Condensed" :height 110 :weight 'regular)
+  (set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 105 :weight 'regular))
+
+(when (eq system-type 'darwin)
+  ;; (set-face-attribute 'default nil :font "PragmataPro Mono Liga" :height 120 :weight 'light)
+  ;; (set-face-attribute 'fixed-pitch nil :font "PragmataPro Mono Liga" :height 120 :weight 'light)
+  (set-face-attribute 'default nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
+  (set-face-attribute 'fixed-pitch nil :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
+  (set-face-attribute 'variable-pitch nil :font "EB Garamond" :height 130 :weight 'regular))
 
 ;; prevent resize window on startup
 (setq frame-inhibit-implied-resize t)
@@ -58,17 +67,7 @@
 ;; trailing whitespace
 (setq-default show-trailing-whitespace nil)
 
-;; package manager
-(require 'package)
-
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			             ("org" . "https://orgmode.org/elpa/")
-			             ("elpa" . "https://elpa.gnu.org/packages/")))
-
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
+;; show line numbers
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
@@ -82,12 +81,29 @@
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
 ;; prog mode reset
-(setq-default tab-width 4)
+(setq-default tab-width 2)
 (setq-default truncate-lines t)
 (setq-default indent-tabs-mode nil)
 (setq indent-line-function 'insert-tab)
 (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
 (add-hook 'prog-mode-hook (lambda () (setq indent-tabs-mode nil)))
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+
+;; helper functions/macros
+(defun timestamp()
+  (interactive)
+  (insert (format-time-string "%B %e, %Y -- %H:%M:%S")))
+
+;; package manager
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			             ("org" . "https://orgmode.org/elpa/")
+			             ("elpa" . "https://elpa.gnu.org/packages/")))
+
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
 
 ;; Init use-package on non-linux. we need this for macbook :/
 (unless (package-installed-p 'use-package)
@@ -101,19 +117,18 @@
 (use-package swiper)
 (use-package ivy
   :diminish
-  :bind (("C-s" . swiper)
-	     :map ivy-minibuffer-map
-	     ("TAB" . ivy-alt-done)
-	     ("C-l" . ivy-alt-done)
-	     ("C-j" . ivy-next-line)
-	     ("C-k" . ivy-previous-line)
-	     :map ivy-switch-buffer-map
-	     ("C-k" . ivy-previous-line)
-	     ("C-l" . ivy-done)
-	     ("C-d" . ivy-switch-buffer-kill)
-	     :map ivy-reverse-i-search-map
-	     ("C-k" . ivy-previous-line)
-	     ("C-d" . ivy-reverse-i-search-kill))
+  :bind (:map ivy-minibuffer-map
+	          ("TAB" . ivy-alt-done)
+	          ("C-l" . ivy-alt-done)
+	          ("C-j" . ivy-next-line)
+	          ("C-k" . ivy-previous-line)
+	          :map ivy-switch-buffer-map
+	          ("C-k" . ivy-previous-line)
+	          ("C-l" . ivy-done)
+	          ("C-d" . ivy-switch-buffer-kill)
+	          :map ivy-reverse-i-search-map
+	          ("C-k" . ivy-previous-line)
+	          ("C-d" . ivy-reverse-i-search-kill))
   :custom
   (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) ")
@@ -134,20 +149,18 @@
 ;; (use-package all-the-icons)
 (use-package nerd-icons)
 
-;; Modeline
+;; Default Modeline
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom (
 	       (doom-modeline-height 40)
-	       ))
-;; (use-package simple-modeline
-;;   :hook (after-init . simple-modeline-mode))
+	       (doom-modeline-bar-width 4)))
+
 (use-package hide-mode-line)
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
 ;; (setq user-emacs-directory "~/.cache/emacs")
-
 (use-package no-littering)
 
 ;; no-littering doesn't set this by default so we must place
@@ -221,7 +234,7 @@
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
+  ;; (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump t)
   (setq evil-undo-system 'undo-fu)
   :config
@@ -289,14 +302,15 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
 
 ;; buffer hydra
 (defhydra hydra-buffers (:exit t :idle 1 :timeout 2)
-  ("b" counsel-switch-buffer              "change buffer")
+  ("b" ivy-switch-buffer                  "change buffer")
   ("k" kill-this-buffer                   "kill da buffer")
   ("n" next-buffer                        "next buffer")
   ("l" previous-buffer                    "prev buffer")
   ("o" evil-switch-to-windows-last-buffer "last buffer")
   ("c" clone-indirect-buffer              "clone buffer")
   ("s" clone-indirect-buffer-other-window "split buffer")
-  ("m" counsel-bookmark                   "bookmarks"))
+  ("m" counsel-bookmark                   "bookmarks")
+  ("d" diff-buffers                       "diff"))
 
 ;; window management hydra
 (defhydra hydra-windows (:exit t :idle 1.5 :timeout 3 :hint nil)
@@ -331,7 +345,9 @@ _h_   _l_   _n_ew       _-_ dec height
   :hook (vterm-mode . hide-mode-line-mode)
   :config
   (setq vterm-kill-buffer-on-exit t)
-  (setq vterm-max-scrollback 5000))
+  (setq vterm-max-scrollback 5000)
+  ;;(setq vterm-buffer-name-string "term %s")
+  )
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
@@ -339,14 +355,13 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (setq tramp-verbose 10)
 (add-hook 'vterm-mode-hook
-	      (lambda ()
-	        (setq config-kill-processes nil)
-	        (setq hscroll-margin 0)
+          (lambda ()
+            (setq config-kill-processes nil)
+            (setq hscroll-margin 0)
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
-            (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
-            ))
+            (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))))
 
 ;; (cl-loop for file in '("/usr/local/bin/zsh" "/bin/zsh")
 ;;         when (file-exists-p file)
@@ -385,6 +400,7 @@ _h_   _l_   _n_ew       _-_ dec height
 (use-package magit
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (use-package magit-delta
   :hook (magit-mode . magit-delta-mode))
@@ -443,15 +459,17 @@ _h_   _l_   _n_ew       _-_ dec height
   (plist-put org-format-latex-options :scale 1)
 
   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-  (set-face-attribute 'org-block nil    :foreground 'unspecified :inherit 'fixed-pitch :height 130)
-  (set-face-attribute 'org-table nil    :inherit 'fixed-pitch :height 130)
-  (set-face-attribute 'org-formula nil  :inherit 'fixed-pitch :height 130)
-  (set-face-attribute 'org-code nil     :inherit '(shadow fixed-pitch) :height 130)
-  (set-face-attribute 'org-table nil    :inherit '(shadow fixed-pitch) :height 130)
-  (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch) :height 130)
-  (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
-  (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch) :height 130)
-  (set-face-attribute 'org-checkbox nil  :inherit 'fixed-pitch :height 130)
+  (let ((fixedheight (if (eq system-type 'gnu/linux) 110
+                       (if (eq system-type 'darwin) 130 110))))
+    (set-face-attribute 'org-block nil :foreground 'unspecified :inherit 'fixed-pitch                          :height fixedheight)
+    (set-face-attribute 'org-table nil                          :inherit 'fixed-pitch                          :height fixedheight)
+    (set-face-attribute 'org-formula nil                        :inherit 'fixed-pitch                          :height fixedheight)
+    (set-face-attribute 'org-code nil                           :inherit '(shadow fixed-pitch)                 :height fixedheight)
+    (set-face-attribute 'org-table nil                          :inherit '(shadow fixed-pitch)                 :height fixedheight)
+    (set-face-attribute 'org-verbatim nil                       :inherit '(shadow fixed-pitch)                 :height fixedheight)
+    (set-face-attribute 'org-special-keyword nil                :inherit '(font-lock-comment-face fixed-pitch) :height fixedheight)
+    (set-face-attribute 'org-meta-line nil                      :inherit '(font-lock-comment-face fixed-pitch) :height fixedheight)
+    (set-face-attribute 'org-checkbox nil                       :inherit 'fixed-pitch                          :height fixedheight))
 
   (setq org-todo-keywords
         '((sequence "TODO" "|" "DONE") (sequence "STALE" "|") (sequence "REQUIRED" "IP" "|" "DONE"))))
@@ -470,18 +488,19 @@ _h_   _l_   _n_ew       _-_ dec height
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
   (org-babel-python-command "python3")
-  ;; (org-agenda-files '("~/Documents/Notes/Tasks.org"))
+  (org-agenda-files '("~/Documents/agenda/Tasks.org"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
-                            ("IP" . org-todo)
-                            ("TODO" . org-todo)
-                            ("DONE" . org-done)
-                            ("STALE" . "#8aacab")))
+                            ("IP"       . org-todo)
+                            ("TODO"     . org-todo)
+                            ("DONE"     . org-done)
+                            ("STALE"    . "#8aacab")))
   (org-latex-logfiles-extensions
    (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))))
 
 (general-def 'normal org-mode-map
   "RET"    'org-open-at-point
-  "SPC op" '(org-latex-export-to-pdf :which-key "org pdf"))
+  "SPC op" '(org-latex-export-to-pdf :which-key "org pdf")
+  "SPC ob" '(org-beamer-export-to-pdf :which-key "org beamer"))
 
 ;; Aesthetics :)
 (setq org-startup-folded t)
@@ -543,15 +562,12 @@ _h_   _l_   _n_ew       _-_ dec height
   (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
   (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
-  (dashboard-items '((recents  . 5)
-		             (bookmarks . 3)
-		             (projects . 3)
-		             (agenda . 3))))
+  (dashboard-items '((recents  . 8))))
 
 ;; dashboard hook doesn't really work
 (setq initial-buffer-choice (lambda ()
 			                  (get-buffer-create "*dashboard*")
-			                  (dashboard-refresh-buffer)))
+			                  (dashboard-open)))
 
 ;; dired customization ... stolen from EFS and dired-single docs
 (defun hades/dired-init ()
@@ -570,8 +586,8 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package dired
   :ensure nil
-  :custom ((insert-directory-program "gls" dired-use-ls-dired t)
-           (dired-listing-switches "-agho --group-directories-first"))
+  :custom ((dired-listing-switches "-agho --group-directories-first")
+           (if (eq system-type darwin) (insert-directory-program "gls" dired-use-ls-dired t) nil))
   :config (hades/dired-init))
 
 (use-package dired-single)
@@ -603,6 +619,9 @@ _h_   _l_   _n_ew       _-_ dec height
 (general-def 'normal TeX-mode-map
   "SPC op" '(TeX-command-master :which-key "pdf export"))
 
+;; GPU time baybee
+(use-package cuda-mode)
+
 ;; assembling leader-based keybinds
 (defun hades/find-file ()
   (interactive)
@@ -620,28 +639,36 @@ _h_   _l_   _n_ew       _-_ dec height
                    (if (> hades/format-on-write-enable 0) "enabled" "disabled"))))
 
 (hades/leader-keys
+  ;; top-level shortcuts (reservved for very useful stuff)
   "SPC" '(hades/find-file :which-key "dynamic file-find")
-  "," '(swiper :which-key "better search")
+  "j" '(swiper :which-key "better search")
   "." '(find-file :which-key "file finder")
   "/" '(projectile-ripgrep :which-key "rg nyoom")
-
   ";" '(counsel-M-x :which-key "M-x")
 
+  ;; Hydras (fancy multilevel chords)
   "b" '(hydra-buffers/body :which-key "buffer commands")
   "w" '(hydra-windows/body :which-key "window management")
   "p" '(:keymap projectile-command-map :which-key "projects")
 
+  ;; Explicit multilevel chords
+  ;; git
   "gg" '(magit-status :which-key "magit")
   "gb" '(magit-blame :which-key "whodunnit")
   "gi" '(vc-annotate :which-key "investigate")
 
+  ;; format
   "fn" '(comment-dwim :which-key "comment toggle")
   "ff" '(hades/global-format-toggle :which-key "global format toggle")
   "fa" '(align-regexp :which-key "align")
 
+  ;; open
   "ot" '(vterm :which-key "term")
   "oz" '(darkroom-mode :which-key "zen")
-  )
+  "oa" '(org-agenda :which-key "agenda")
+
+  ;; macros
+  "mt" '(timestamp :which-key "timestamp"))
 
 ;; text-scaling
 (general-define-key
@@ -665,19 +692,6 @@ _h_   _l_   _n_ew       _-_ dec height
 (delete-selection-mode 1)
 (setq backup-directory-alist `(("." . "~/.saves")))
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("d225c008d53d789cdd96e5f3f1a1be77f1eeb4883a82f6345c2a2782bc603275" "603876c8fe23371998d7aa13dc488fd6cb6167f2a74ae9db46ffdf6987d90018" "6d4309dd9dcab7cbb8fd8cb3982273d7923e8aea903a397eacf042e1ed4473f4" "e3daa8f18440301f3e54f2093fe15f4fe951986a8628e98dcd781efbec7a46f2" "f64189544da6f16bab285747d04a92bd57c7e7813d8c24c30f382f087d460a33" "5a616566cd92da30acd38f0c403e46e214301651db2a66c4062c7801adc7d24b" "1a1ac598737d0fcdc4dfab3af3d6f46ab2d5048b8e72bc22f50271fd6d393a00" "0ed3704b821ef38be5bfa7f2d10639b3cfb7ecbea9d86edf6a85214074eb2212" "9aff615f9069aff51f92b1463c21d47ad6138f5ffcd546cc245383be0b3d7a0f" "944d52450c57b7cbba08f9b3d08095eb7a5541b0ecfb3a0a9ecd4a18f3c28948" default))
- '(package-selected-packages
-   '(auctex eglot darkroom zen-mode rg openwith evil-surround org-roam evil-snipe hide-mode-line lsp-mode ein markdown-mode which-key vterm visual-fill-column use-package undo-fu-session undo-fu rainbow-delimiters org-bullets no-littering magit ivy-rich hydra helpful general format-all evil-collection doom-themes doom-modeline dired-single dashboard counsel-projectile))
- '(warning-suppress-types '((emacs) (comp))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; Don't want the source file to have custom garbage
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(load custom-file 'noerror)
