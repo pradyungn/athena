@@ -546,6 +546,36 @@ _h_   _l_   _n_ew       _-_ dec height
 			                  '(("^ *\\([-]\\) "
 			                     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
 
+(setq org-roam-capture-templates
+      '(("m" "main" plain
+         "%?"
+         :if-new (file+head "main/${slug}.org"
+                            "#+title: ${title}\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("n" "notes" plain "%?"
+         :if-new (file+head "notes/${slug}.org"
+                            "#+title: ${title}\n")
+         :immediate-finish t
+         :unnarrowed t)
+        ("t" "thoughts" plain "%?"
+         :if-new (file+head "thoughts/${slug}.org"
+                            "#+title: ${title}\n")
+         :immediate-finish t
+         :unnarrowed t)))
+
+(cl-defmethod org-roam-node-type ((node org-roam-node))
+  "Return the TYPE of NODE."
+  (condition-case nil
+      (file-name-nondirectory
+       (directory-file-name
+        (file-name-directory
+         (file-relative-name (org-roam-node-file node) org-roam-directory))))
+    (error "")))
+
+(setq org-roam-node-display-template
+      (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
 ;; dashboard
 (use-package dashboard
   :config
@@ -695,3 +725,6 @@ _h_   _l_   _n_ew       _-_ dec height
 ;; Don't want the source file to have custom garbage
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file 'noerror)
+
+;; Funnies
+(setq frame-title-format "Emacs (%b)")
