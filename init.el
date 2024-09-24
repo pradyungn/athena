@@ -5,14 +5,14 @@
 	          (setq gc-cons-threshold (* 2 1000 1000))))
 
 ;; startup time - stolen directly from efs
-;; (defun hades/display-startup-time ()
+;; (defun athena/display-startup-time ()
 ;;   (message "Emacs loaded in %s with %d garbage collections."
 ;; 		   (format "%.2f seconds"
 ;; 				   (float-time
 ;; 					(time-subtract after-init-time before-init-time)))
 ;; 		   gcs-done))
 
-;; (add-hook 'emacs-startup-hook #'hades/display-startup-time)
+;; (add-hook 'emacs-startup-hook #'athena/display-startup-time)
 
 ;; shut up emacs ;-;
 (setq inhibit-startup-message t)
@@ -211,7 +211,7 @@
   :config
   (general-evil-setup t)
 
-  (general-create-definer hades/leader-keys
+  (general-create-definer athena/leader-keys
     :states '(insert visual emacs normal)
     :keymaps 'override
     :prefix "SPC"
@@ -250,7 +250,7 @@
   (evil-collection-init))
 
 ;; window functions - stolen from doom emacs (hlissner ily)
-(defun hades/window-swap (direction)
+(defun athena/window-swap (direction)
   "Move current window to the next window in DIRECTION.
 If there are no windows there and there is only one window, split in that
 direction and place this window there. If there are no windows and this isn't
@@ -283,18 +283,18 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
       (window-swap-states this-window that-window)
       (select-window that-window))))
 
-(defun hades/window-move-left ()
+(defun athena/window-move-left ()
   "Swap windows to the left."
-  (interactive) (hades/window-swap 'left))
-(defun hades/window-move-right ()
+  (interactive) (athena/window-swap 'left))
+(defun athena/window-move-right ()
   "Swap windows to the right"
-  (interactive) (hades/window-swap 'right))
-(defun hades/window-move-up ()
+  (interactive) (athena/window-swap 'right))
+(defun athena/window-move-up ()
   "Swap windows upward."
-  (interactive) (hades/window-swap 'up))
-(defun hades/window-move-down ()
+  (interactive) (athena/window-swap 'up))
+(defun athena/window-move-down ()
   "Swap windows downward."
-  (interactive) (hades/window-swap 'down))
+  (interactive) (athena/window-swap 'down))
 
 ;; Hydra for nice stuffs
 (use-package hydra)
@@ -320,7 +320,7 @@ _h_   _l_   _n_ew       _-_ dec height
 ^^^^        ^ ^         _<_ dec height
 "
   ;;   "
-  ;; HadesWM is active
+  ;; AthenaWM is active
   ;; "
   ("h" evil-window-left)
   ("j" evil-window-down)
@@ -329,10 +329,10 @@ _h_   _l_   _n_ew       _-_ dec height
   ("c" evil-window-delete)
   ("n" evil-window-split)
   ("v" evil-window-vsplit)
-  ("H" hades/window-move-left)
-  ("J" hades/window-move-down)
-  ("K" hades/window-move-up)
-  ("L" hades/window-move-right)
+  ("H" athena/window-move-left)
+  ("J" athena/window-move-down)
+  ("K" athena/window-move-up)
+  ("L" athena/window-move-right)
   (">" evil-window-increase-width :exit nil)
   ("<" evil-window-decrease-width :exit nil)
   ("=" evil-window-increase-height :exit nil )
@@ -386,14 +386,14 @@ _h_   _l_   _n_ew       _-_ dec height
 (exec-path-from-shell-initialize)
 
 ;; auto-format
-(setq hades/format-on-write-enable 1)
-(defun hades/format-hook ()
-  (if (> hades/format-on-write-enable 0)
+(setq athena/format-on-write-enable 1)
+(defun athena/format-hook ()
+  (if (> athena/format-on-write-enable 0)
       (apheleia-mode)))
 
 (use-package apheleia
   :hook
-  (prog-mode . hades/format-hook))
+  (prog-mode . athena/format-hook))
 
 ;; magit
 (use-package magit
@@ -442,13 +442,13 @@ _h_   _l_   _n_ew       _-_ dec height
 ;;   (verilog-mode . verilog-ext-mode))
 
 ;; org mode!!
-(defun hades/org-init ()
+(defun athena/org-init ()
   (org-indent-mode)
   (variable-pitch-mode 1)
   (visual-line-mode 1)
   (setq org-fontify-quote-and-verse-blocks t))
 
-(defun hades/org-fonts ()
+(defun athena/org-fonts ()
   (dolist (face '((org-level-1 . 1.5)
 		              (org-level-2 . 1.35)
 		              (org-level-3 . 1.2)
@@ -475,9 +475,9 @@ _h_   _l_   _n_ew       _-_ dec height
 
 (use-package org
   :pin org
-  :hook (org-mode . hades/org-init)
+  :hook (org-mode . athena/org-init)
   :config
-  (hades/org-fonts)
+  (athena/org-fonts)
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -507,14 +507,14 @@ _h_   _l_   _n_ew       _-_ dec height
 ;; weird pdflatex bug
 (setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
-(defun hades/org-mode-visual-fill ()
+(defun athena/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
 	      visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
   :defer t
-  :hook (org-mode . hades/org-mode-visual-fill))
+  :hook (org-mode . athena/org-mode-visual-fill))
 
 (use-package org-bullets
   :after org
@@ -526,7 +526,7 @@ _h_   _l_   _n_ew       _-_ dec height
   )
 
 ;; org-roam setup
-(defvar hades/roam-map
+(defvar athena/roam-map
   (let ((map (make-sparse-keymap)))
     (define-key map "l" 'org-roam-buffer-toggle)
     (define-key map "f" 'org-roam-node-find)
@@ -538,7 +538,7 @@ _h_   _l_   _n_ew       _-_ dec height
   :custom
   (org-roam-directory "~/Documents/Notes/Roam")
   :config
-  (hades/leader-keys "n" '(:keymap hades/roam-map :package org-roam))
+  (athena/leader-keys "n" '(:keymap athena/roam-map :package org-roam))
   (org-roam-setup))
 
 
@@ -599,7 +599,7 @@ _h_   _l_   _n_ew       _-_ dec height
 			                        (dashboard-open)))
 
 ;; dired customization ... stolen from EFS and dired-single docs
-(defun hades/dired-init ()
+(defun athena/dired-init ()
   "Bunch of stuff to run for dired, either immediately or when it's
    loaded."
   ;; <add other stuff here>:config
@@ -618,7 +618,7 @@ _h_   _l_   _n_ew       _-_ dec height
   :custom ((dired-listing-switches "-agho --group-directories-first")
            (insert-directory-program (if (eq system-type 'darwin) "gls" "ls"))
            (dired-use-ls-dired (eq system-type 'darwin)))
-  :config (hades/dired-init))
+  :config (athena/dired-init))
 
 (use-package dired-single)
 
@@ -653,52 +653,52 @@ _h_   _l_   _n_ew       _-_ dec height
 (use-package cuda-mode)
 
 ;; assembling leader-based keybinds
-(defun hades/find-file ()
+(defun athena/find-file ()
   (interactive)
   (call-interactively
    (if (projectile-project-p)
        #'counsel-projectile-find-file
      #'counsel-find-file)))
 
-(byte-compile 'hades/find-file)
+(byte-compile 'athena/find-file)
 
-(defun hades/global-format-toggle ()
+(defun athena/global-format-toggle ()
   (interactive)
-  (setq hades/format-on-write-enable (* -1 hades/format-on-write-enable))
+  (setq athena/format-on-write-enable (* -1 athena/format-on-write-enable))
   (message (format "Formatting is %s for new buffers."
-                   (if (> hades/format-on-write-enable 0) "enabled" "disabled"))))
+                   (if (> athena/format-on-write-enable 0) "enabled" "disabled"))))
 
-(hades/leader-keys
-  ;; top-level shortcuts (reservved for very useful stuff)
-  "SPC" '(hades/find-file :which-key "dynamic file-find")
-  "j" '(swiper :which-key "better search")
-  "." '(find-file :which-key "file finder")
-  "/" '(projectile-ripgrep :which-key "rg nyoom")
-  ";" '(counsel-M-x :which-key "M-x")
+(athena/leader-keys
+ ;; top-level shortcuts (reservved for very useful stuff)
+ "SPC" '(athena/find-file :which-key "dynamic file-find")
+ "j" '(swiper :which-key "better search")
+ "." '(find-file :which-key "file finder")
+ "/" '(projectile-ripgrep :which-key "rg nyoom")
+ ";" '(counsel-M-x :which-key "M-x")
 
-  ;; Hydras (fancy multilevel chords)
-  "b" '(hydra-buffers/body :which-key "buffer commands")
-  "w" '(hydra-windows/body :which-key "window management")
-  "p" '(:keymap projectile-command-map :which-key "projects")
+ ;; Hydras (fancy multilevel chords)
+ "b" '(hydra-buffers/body :which-key "buffer commands")
+ "w" '(hydra-windows/body :which-key "window management")
+ "p" '(:keymap projectile-command-map :which-key "projects")
 
-  ;; Explicit multilevel chords
-  ;; git
-  "gg" '(magit-status :which-key "magit")
-  "gb" '(magit-blame :which-key "whodunnit")
-  "gi" '(vc-annotate :which-key "investigate")
+ ;; Explicit multilevel chords
+ ;; git
+ "gg" '(magit-status :which-key "magit")
+ "gb" '(magit-blame :which-key "whodunnit")
+ "gi" '(vc-annotate :which-key "investigate")
 
-  ;; format
-  "fn" '(comment-dwim :which-key "comment toggle")
-  "ff" '(hades/global-format-toggle :which-key "global format toggle")
-  "fa" '(align-regexp :which-key "align")
+ ;; format
+ "fn" '(comment-dwim :which-key "comment toggle")
+ "ff" '(athena/global-format-toggle :which-key "global format toggle")
+ "fa" '(align-regexp :which-key "align")
 
-  ;; open
-  "ot" '(vterm :which-key "term")
-  "oz" '(darkroom-mode :which-key "zen")
-  "oa" '(org-agenda :which-key "agenda")
+ ;; open
+ "ot" '(vterm :which-key "term")
+ "oz" '(darkroom-mode :which-key "zen")
+ "oa" '(org-agenda :which-key "agenda")
 
-  ;; macros
-  "mt" '(timestamp :which-key "timestamp"))
+ ;; macros
+ "mt" '(timestamp :which-key "timestamp"))
 
 ;; text-scaling
 (general-define-key
