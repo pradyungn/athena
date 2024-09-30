@@ -4,16 +4,6 @@
 	        (lambda ()
 	          (setq gc-cons-threshold (* 2 1000 1000))))
 
-;; startup time - stolen directly from efs
-;; (defun athena/display-startup-time ()
-;;   (message "Emacs loaded in %s with %d garbage collections."
-;; 		   (format "%.2f seconds"
-;; 				   (float-time
-;; 					(time-subtract after-init-time before-init-time)))
-;; 		   gcs-done))
-
-;; (add-hook 'emacs-startup-hook #'athena/display-startup-time)
-
 ;; shut up emacs ;-;
 (setq inhibit-startup-message t)
 (setq auto-revert-verbose nil)
@@ -669,36 +659,38 @@ _h_   _l_   _n_ew       _-_ dec height
                    (if (> athena/format-on-write-enable 0) "enabled" "disabled"))))
 
 (athena/leader-keys
- ;; top-level shortcuts (reservved for very useful stuff)
- "SPC" '(athena/find-file :which-key "dynamic file-find")
- "j" '(swiper :which-key "better search")
- "." '(find-file :which-key "file finder")
- "/" '(projectile-ripgrep :which-key "rg nyoom")
- ";" '(counsel-M-x :which-key "M-x")
+  ;; top-level shortcuts (reserved for very useful stuff)
+  "SPC" '(athena/find-file :which-key "dynamic file-find")
+  "j" '(swiper :which-key "better search")
+  "." '(find-file :which-key "file finder")
+  "/" '(projectile-ripgrep :which-key "rg nyoom")
+  ";" '(counsel-M-x :which-key "M-x")
 
- ;; Hydras (fancy multilevel chords)
- "b" '(hydra-buffers/body :which-key "buffer commands")
- "w" '(hydra-windows/body :which-key "window management")
- "p" '(:keymap projectile-command-map :which-key "projects")
+  ;; Hydras (fancy multilevel chords)
+  "b" '(hydra-buffers/body :which-key "buffer commands")
+  "w" '(hydra-windows/body :which-key "window management")
 
- ;; Explicit multilevel chords
- ;; git
- "gg" '(magit-status :which-key "magit")
- "gb" '(magit-blame :which-key "whodunnit")
- "gi" '(vc-annotate :which-key "investigate")
+  ;; Explicit multilevel chords
+  ;; projectile
+  "p" '(:keymap projectile-command-map :which-key "projects")
 
- ;; format
- "fn" '(comment-dwim :which-key "comment toggle")
- "ff" '(athena/global-format-toggle :which-key "global format toggle")
- "fa" '(align-regexp :which-key "align")
+  ;; git
+  "gg" '(magit-status :which-key "magit")
+  "gb" '(magit-blame :which-key "whodunnit")
+  "gi" '(vc-annotate :which-key "investigate")
 
- ;; open
- "ot" '(vterm :which-key "term")
- "oz" '(darkroom-mode :which-key "zen")
- "oa" '(org-agenda :which-key "agenda")
+  ;; format
+  "fn" '(comment-dwim :which-key "comment toggle")
+  "ff" '(athena/global-format-toggle :which-key "global format toggle")
+  "fa" '(align-regexp :which-key "align")
 
- ;; macros
- "mt" '(timestamp :which-key "timestamp"))
+  ;; open
+  "ot" '(vterm :which-key "term")
+  "oz" '(darkroom-mode :which-key "zen")
+  "oa" '(org-agenda :which-key "agenda")
+
+  ;; macros
+  "mt" '(timestamp :which-key "timestamp"))
 
 ;; text-scaling
 (general-define-key
