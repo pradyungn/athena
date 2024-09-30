@@ -477,7 +477,7 @@ _h_   _l_   _n_ew       _-_ dec height
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
   (org-babel-python-command "python3")
-  (org-agenda-files '("~/Documents/agenda/Tasks.org"))
+  (org-agenda-files '("~/Documents/Notes/Roam/main/"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
                             ("IP"       . org-todo)
                             ("TODO"     . org-todo)
@@ -641,6 +641,9 @@ _h_   _l_   _n_ew       _-_ dec height
 
 ;; GPU time baybee
 (use-package cuda-mode)
+
+;; crab rave
+(use-package rust-mode)
 
 ;; assembling leader-based keybinds
 (defun athena/find-file ()
