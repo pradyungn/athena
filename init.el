@@ -304,8 +304,8 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
 ;; window management hydra
 (defhydra hydra-windows (:exit t :idle 1.5 :timeout 3 :hint nil)
   "
-  ^_k_^     _c_lose     _=_ inc height
-_h_   _l_   _n_ew       _-_ dec height
+  ^_k_^     _c_lose     _=_ inc height   _\__ set height
+_h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   ^_j_^     _v_split    _>_ inc width
 ^^^^        ^ ^         _<_ dec height
 "
@@ -325,9 +325,11 @@ _h_   _l_   _n_ew       _-_ dec height
   ("L" athena/window-move-right)
   (">" evil-window-increase-width :exit nil)
   ("<" evil-window-decrease-width :exit nil)
-  ("=" evil-window-increase-height :exit nil )
+  ("=" evil-window-increase-height :exit nil)
   ("-" evil-window-decrease-height :exit nil)
-  ("?" (setq hydra-is-helpful t) :exit nil))
+  ("?" (setq hydra-is-helpful t) :exit nil)
+  ("_" evil-window-set-height)
+  ("|" evil-window-set-width))
 
 ;; vterm - config stolen from doom emacs
 (use-package vterm
@@ -721,5 +723,5 @@ _h_   _l_   _n_ew       _-_ dec height
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (load custom-file 'noerror)
 
-;; Funnies
+;; Better window titling
 (setq frame-title-format "Emacs (%b)")
