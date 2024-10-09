@@ -1,4 +1,8 @@
 ;;; -- Package Installs and Configs --
+
+;; index local packages
+(add-to-list 'load-path (concat user-emacs-directory "pkg"))
+
 ;; package manager
 (require 'package)
 
@@ -14,7 +18,7 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-;; make sure all usd packages are installed
+;; make sure all used packages are installed
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -39,9 +43,6 @@
   (ivy-count-format "(%d/%d) ")
   :config
   (ivy-mode 1))
-
-(general-def ivy-mode-map
-  "C-;" 'ivy-immediate-done)
 
 ;; enable doom theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -396,20 +397,14 @@
 			                        (get-buffer-create "*dashboard*")
 			                        (dashboard-open)))
 
-;; dired customization ... stolen from EFS and dired-single docs
 (defun athena/dired-init ()
-  "Bunch of stuff to run for dired, either immediately or when it's
-   loaded."
-  ;; <add other stuff here>:config
+  (require 'dired+)
   (evil-collection-define-key 'normal 'dired-mode-map
-    "h" 'dired-single-up-directory
-    "l" 'dired-single-buffer)
-  (evil-collection-define-key 'normal 'dired-mode-map [remap dired-find-file]
-    'dired-single-buffer)
-  (evil-collection-define-key 'normal 'dired-mode-map [remap dired-mouse-find-file-other-window]
-    'dired-single-buffer-mouse)
-  (evil-collection-define-key 'normal 'dired-mode-map [remap dired-up-directory]
-    'dired-single-up-directory))
+    "h" 'diredp-up-directory-reuse-dir-buffer
+    "l" 'diredp-find-file-reuse-dir-buffer)
+  (diredp-toggle-find-file-reuse-dir 1)
+  (setq diredp-hide-details-initially-flag nil)
+  (setq diredp-hide-details-propagate-flag nil))
 
 (use-package dired
   :ensure nil
@@ -417,8 +412,6 @@
            (insert-directory-program (if (eq system-type 'darwin) "gls" "ls"))
            (dired-use-ls-dired (eq system-type 'darwin)))
   :config (athena/dired-init))
-
-(use-package dired-single)
 
 (use-package nerd-icons-dired
   :if

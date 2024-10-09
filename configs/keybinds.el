@@ -25,6 +25,10 @@
  "C-=" 'text-scale-increase
  "M-;" 'shell-command)
 
+;; Ivy shortcut
+(general-def ivy-mode-map
+  "C-;" 'ivy-immediate-done)
+
 ;; org-roam keybinds
 (defvar athena/roam-map
   (let ((map (make-sparse-keymap)))
@@ -116,6 +120,7 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   "ot" '(vterm :which-key "term")
   "oz" '(darkroom-mode :which-key "zen")
   "oa" '(org-agenda :which-key "agenda")
+  "or" '(revert-buffer-quick :which-key "reload-buf")
 
   ;; macros
   "mt" '(timestamp :which-key "timestamp"))
