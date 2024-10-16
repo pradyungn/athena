@@ -123,4 +123,4 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   "or" '(revert-buffer-quick :which-key "reload-buf")
 
   ;; macros
-  "mt" '(timestamp :which-key "timestamp"))
+  "mt" '(athena/timestamp :which-key "timestamp"))

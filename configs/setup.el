@@ -36,8 +36,8 @@
   (set-face-attribute 'variable-pitch nil :font "Crimson Text"             :height 110 :weight 'regular))
 
 (when (eq system-type 'darwin)
-  ;; (set-face-attribute 'default nil :font "PragmataPro Mono Liga" :height 120 :weight 'light)
-  ;; (set-face-attribute 'fixed-pitch nil :font "PragmataPro Mono Liga" :height 120 :weight 'light)
+  ;; (set-face-attribute 'default nil :font "PragmataPro Mono Liga" :height 130 :weight 'light)
+  ;; (set-face-attribute 'fixed-pitch nil :font "PragmataPro Mono Liga" :height 130 :weight 'light)
   (set-face-attribute 'default nil        :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
   (set-face-attribute 'fixed-pitch nil    :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
   (set-face-attribute 'variable-pitch nil :font "Crimson Text"             :height 130 :weight 'regular))

@@ -308,7 +308,8 @@
 (general-def 'normal org-mode-map
   "RET"    'org-open-at-point
   "SPC op" '(org-latex-export-to-pdf :which-key "org pdf")
-  "SPC ob" '(org-beamer-export-to-pdf :which-key "org beamer"))
+  "SPC ob" '(org-beamer-export-to-pdf :which-key "org beamer")
+  "SPC ov" '(athena/open-org-pdf-zathura :which-key "open the pdf"))
 
 ;; Aesthetics :)
 (setq org-startup-folded t)

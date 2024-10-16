@@ -1,5 +1,5 @@
 ;;; -- Helper Functions and Macros --
-(defun timestamp()
+(defun athena/timestamp()
   (interactive)
   (insert (format-time-string "%B %e, %Y -- %H:%M:%S")))
 
@@ -49,3 +49,12 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
 (defun athena/window-move-down ()
   "Swap windows downward."
   (interactive) (athena/window-swap 'down))
+
+;; pdf viewer
+(defun athena/open-org-pdf-zathura ()
+  (interactive)
+  (let ((filename (buffer-file-name)))
+    (if (and filename (s-ends-with-p ".org" filename))
+        (let ((pdffile
+               (concat (string-trim-right filename "\.org") ".pdf")))
+          (call-process-shell-command (concat "zathura '" pdffile "' &") nil 0)))))
