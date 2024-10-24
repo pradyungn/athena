@@ -38,19 +38,7 @@
     map)
   "roam keymap")
 
-;; buffer hydra
-(defhydra athena/buffer-map (:exit t :idle 1 :timeout 2)
-  ("b" ivy-switch-buffer                  "change buffer")
-  ("k" kill-this-buffer                   "kill da buffer")
-  ("n" next-buffer                        "next buffer")
-  ("l" previous-buffer                    "prev buffer")
-  ("o" evil-switch-to-windows-last-buffer "last buffer")
-  ("c" clone-indirect-buffer              "clone buffer")
-  ("s" clone-indirect-buffer-other-window "split buffer")
-  ("m" counsel-bookmark                   "bookmarks")
-  ("d" diff-buffers                       "diff"))
-
-;; window management hydra
+;; AthenaWM hydra - allows for spammed resizes
 (defhydra athena/win-map (:exit t :idle 1.5 :timeout 3 :hint nil)
   "
   ^_k_^     _c_lose     _=_ inc height   _\__ set height
@@ -58,9 +46,6 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   ^_j_^     _v_split    _>_ inc width
 ^^^^        ^ ^         _<_ dec height
 "
-  ;;   "
-  ;; AthenaWM is active
-  ;; "
   ("h" evil-window-left)
   ("j" evil-window-down)
   ("k" evil-window-up)
@@ -72,11 +57,11 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   ("J" athena/window-move-down)
   ("K" athena/window-move-up)
   ("L" athena/window-move-right)
-  (">" evil-window-increase-width :exit nil)
-  ("<" evil-window-decrease-width :exit nil)
+  (">" evil-window-increase-width  :exit nil)
+  ("<" evil-window-decrease-width  :exit nil)
   ("=" evil-window-increase-height :exit nil)
   ("-" evil-window-decrease-height :exit nil)
-  ("?" (setq hydra-is-helpful t) :exit nil)
+  ("?" (setq hydra-is-helpful t)   :exit nil)
   ("_" evil-window-set-height)
   ("|" evil-window-set-width))
 
@@ -89,17 +74,26 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
 
 (athena/leader-keys
   ;; top-level shortcuts (reserved for very useful stuff)
-  "SPC" '(athena/find-file :which-key "dynamic file-find")
-  "j" '(swiper :which-key "better search")
-  "." '(find-file :which-key "file finder")
-  "/" '(projectile-ripgrep :which-key "rg nyoom")
-  ";" '(counsel-M-x :which-key "M-x")
+  "SPC" '(athena/find-file   :which-key "dynamic file-find")
+  "j"   '(swiper             :which-key "better search")
+  "."   '(find-file          :which-key "file finder")
+  "/"   '(projectile-ripgrep :which-key "rg nyoom")
+  ";"   '(counsel-M-x        :which-key "M-x")
 
   ;; Hydras (fancy multilevel chords)
-  "b" '(athena/buffer-map/body :which-key "buffer commands")
   "w" '(athena/win-map/body :which-key "window management")
 
-  ;; Explicit multilevel chords
+  ;; buffer management
+  "bb" '(ivy-switch-buffer                  :which-key "change buffer")
+  "bk" '(kill-this-buffer                   :which-key "kill da buffer")
+  "bn" '(next-buffer                        :which-key "next buffer")
+  "bl" '(previous-buffer                    :which-key "prev buffer")
+  "bo" '(evil-switch-to-windows-last-buffer :which-key "last buffer")
+  "bc" '(clone-indirect-buffer              :which-key "clone buffer")
+  "bs" '(clone-indirect-buffer-other-window :which-key "split buffer")
+  "bm" '(counsel-bookmark                   :which-key "bookmarks")
+  "bd" '(diff-buffers                       :which-key "diff")
+
   ;; projectile
   "p" '(:keymap projectile-command-map :which-key "projects")
 
@@ -108,18 +102,18 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
 
   ;; git
   "gg" '(magit-status :which-key "magit")
-  "gb" '(magit-blame :which-key "whodunnit")
-  "gi" '(vc-annotate :which-key "investigate")
+  "gb" '(magit-blame  :which-key "whodunnit")
+  "gi" '(vc-annotate  :which-key "investigate")
 
   ;; format
-  "fn" '(comment-dwim :which-key "comment toggle")
+  "fn" '(comment-dwim                :which-key "comment toggle")
   "ff" '(athena/global-format-toggle :which-key "global format toggle")
-  "fa" '(align-regexp :which-key "align")
+  "fa" '(align-regexp                :which-key "align")
 
   ;; open
-  "ot" '(vterm :which-key "term")
-  "oz" '(darkroom-mode :which-key "zen")
-  "oa" '(org-agenda :which-key "agenda")
+  "ot" '(vterm               :which-key "term")
+  "oz" '(darkroom-mode       :which-key "zen")
+  "oa" '(org-agenda          :which-key "agenda")
   "or" '(revert-buffer-quick :which-key "reload-buf")
 
   ;; macros

@@ -1,9 +1,9 @@
 ;;; -- Settings and Setup --
 (setq gc-cons-threshold most-positive-fixnum)
 
-(add-hook 'emacs-startup-hook
-	        (lambda ()
-	          (setq gc-cons-threshold (* 2 1000 1000))))
+;; (add-hook 'emacs-startup-hook
+;; 	        (lambda ()
+;; 	          (setq gc-cons-threshold (* 2 1000 1000))))
 
 ;; shut up emacs ;-;
 (setq inhibit-startup-message t)
@@ -86,6 +86,12 @@
 
 ;; Better window titling
 (setq frame-title-format "Emacs (%b)")
+
+;; set default PDF viewer
+(when (eq system-type 'gnu/linux)
+  (setq athena/pdf-viewer "zathura"))
+(when (eq system-type 'darwin)
+  (setq athena/pdf-viewer 'open))
 
 ;; other random settings
 (setq undo-limit 80000000

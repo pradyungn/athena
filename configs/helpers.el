@@ -51,10 +51,20 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (interactive) (athena/window-swap 'down))
 
 ;; pdf viewer
-(defun athena/open-org-pdf-zathura ()
-  (interactive)
+(defun athena/open-pdf (ext)
   (let ((filename (buffer-file-name)))
-    (if (and filename (s-ends-with-p ".org" filename))
+    (if (and filename (s-ends-with-p ext filename))
         (let ((pdffile
-               (concat (string-trim-right filename "\.org") ".pdf")))
-          (call-process-shell-command (concat "zathura '" pdffile "' &") nil 0)))))
+               (concat (string-trim-right filename ext) ".pdf")))
+          (call-process-shell-command (concat athena/pdf-viewer " '" pdffile "' &") nil 0)))))
+
+(defun athena/open-org-pdf ()
+  (interactive) (athena/open-pdf ".org"))
+
+(defun athena/open-tex-pdf ()
+  (interactive) (athena/open-pdf ".tex"))
+
+(defun athena/compile-tex-pdf ()
+  (interactive)
+  (TeX-master-file nil nil t)  ;; call to ask if necessary
+  (TeX-command "LaTeX" #'TeX-master-file nil))

@@ -3,6 +3,11 @@
 ;; index local packages
 (add-to-list 'load-path (concat user-emacs-directory "pkg"))
 
+;; garbage collector magic hack
+;; via https://akrl.sdf.org
+(require 'gcmh)
+(gcmh-mode 1)
+
 ;; package manager
 (require 'package)
 
@@ -285,12 +290,19 @@
 (use-package org
   :pin org
   :hook (org-mode . athena/org-init)
+
   :config
   (athena/org-fonts)
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)))
+  (general-def 'normal org-mode-map
+    "RET"    'org-open-at-point
+    "SPC op" '(org-latex-export-to-pdf  :which-key "pdf export")
+    "SPC ob" '(org-beamer-export-to-pdf :which-key "beamer export")
+    "SPC ov" '(athena/open-org-pdf      :which-key "pdf viewer"))
+
   :custom
   (org-capture-bookmark nil)
   (org-hide-leading-stars t)
@@ -304,12 +316,6 @@
                             ("STALE"    . "#8aacab")))
   (org-latex-logfiles-extensions
    (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))))
-
-(general-def 'normal org-mode-map
-  "RET"    'org-open-at-point
-  "SPC op" '(org-latex-export-to-pdf :which-key "org pdf")
-  "SPC ob" '(org-beamer-export-to-pdf :which-key "org beamer")
-  "SPC ov" '(athena/open-org-pdf-zathura :which-key "open the pdf"))
 
 ;; Aesthetics :)
 (setq org-startup-folded t)
@@ -437,9 +443,11 @@
   :ensure auctex
   :custom
   (TeX-engine 'luatex)
-  (TeX-PDF-mode t))
-(general-def 'normal TeX-mode-map
-  "SPC op" '(TeX-command-master :which-key "pdf export"))
+  (TeX-PDF-mode t)
+  :config
+  (general-def 'normal TeX-mode-map
+    "SPC op" '(athena/compile-tex-pdf :which-key "pdf export")
+    "SPC ov" '(athena/open-tex-pdf    :which-key "pdf viewer")))
 
 ;; GPU time baybee
 (use-package cuda-mode)
