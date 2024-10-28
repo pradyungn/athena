@@ -1,6 +1,5 @@
 ;;; -- Settings and Setup --
-(setq gc-cons-threshold most-positive-fixnum)
-
+;; (setq gc-cons-threshold most-positive-fixnum)
 ;; (add-hook 'emacs-startup-hook
 ;; 	        (lambda ()
 ;; 	          (setq gc-cons-threshold (* 2 1000 1000))))
@@ -70,6 +69,7 @@
 
 ;; prog mode reset
 (setq-default tab-width 2)
+(setq-default fill-column 80)
 (setq-default truncate-lines t)
 (setq-default indent-tabs-mode nil)
 (setq indent-line-function 'insert-tab)
@@ -99,3 +99,13 @@
 
 (delete-selection-mode 1)
 (setq backup-directory-alist `(("." . "~/.saves")))
+
+;; preventing large file idiocies
+(defun athena/large-file-opt ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1024 1024))
+    (setq buffer-read-only t)
+    (buffer-disable-undo)
+    (fundamental-mode)))
+
+(add-hook 'find-file-hook 'athena/large-file-opt)

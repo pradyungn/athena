@@ -165,8 +165,6 @@
 ;; (add-to-list 'display-buffer-alist
 ;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
 ;;                (display-buffer-in-side-window (side . bottom))))
-
-(setq tramp-verbose 10)
 (add-hook 'vterm-mode-hook
           (lambda ()
             (setq config-kill-processes nil)
@@ -187,7 +185,8 @@
 ;; projectile
 (use-package projectile
   :diminish projectile-mode
-  :config (projectile-mode)
+  :config
+  (projectile-mode)
   :custom ((projectile-completion-system 'ivy))
   :init
   (setq projectile-switch-project-action #'projectile-dired))
@@ -196,8 +195,9 @@
   :config (counsel-projectile-mode))
 
 ;; path management
-(use-package exec-path-from-shell)
-(exec-path-from-shell-initialize)
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
 
 ;; auto-format
 (setq athena/format-on-write-enable 1)
@@ -206,16 +206,19 @@
       (apheleia-mode)))
 
 (use-package apheleia
+  :defer t
   :hook
   (prog-mode . athena/format-hook))
 
 ;; magit
 (use-package magit
+  :defer t
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (use-package magit-delta
+  :after magit
   :hook (magit-mode . magit-delta-mode))
 
 ;; markdown
@@ -231,7 +234,8 @@
 (use-package outshine)
 
 ;; Verilog
-(use-package verilog-mode)
+(use-package verilog-mode
+  :defer t)
 
 ;; disabled while not properly configured
 ;; (use-package verilog-ext
@@ -304,9 +308,15 @@
     "SPC ov" '(athena/open-org-pdf      :which-key "pdf viewer"))
 
   :custom
+  (org-startup-folded t)
   (org-capture-bookmark nil)
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
+  (org-latex-pdf-process
+   '("xelatex -interaction nonstopmode -output-directory %o %f"
+     "bibtex %b"
+     "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-babel-python-command "python3")
   (org-agenda-files '("~/Documents/Notes/Roam/main/"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
@@ -317,11 +327,7 @@
   (org-latex-logfiles-extensions
    (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))))
 
-;; Aesthetics :)
-(setq org-startup-folded t)
-
 ;; weird pdflatex bug
-(setq org-latex-pdf-process '("xelatex -interaction nonstopmode -output-directory %o %f" "bibtex %b" "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f" "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 (defun athena/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -338,8 +344,7 @@
   :custom
   (org-bullets-bullet-list
    ;; '("◉" "○" "●" "○" "●" "○" "●"))
-   '("\u200b"))
-  )
+   '("\u200b")))
 
 (use-package org-roam
   :custom
@@ -430,7 +435,8 @@
 (use-package rg)
 
 ;; Konchantrate
-(use-package darkroom)
+(use-package darkroom
+  :defer t)
 
 ;; snippets (v useful)
 (use-package yasnippet-snippets)
@@ -440,6 +446,7 @@
 
 ;; auctex
 (use-package tex
+  :defer t
   :ensure auctex
   :custom
   (TeX-engine 'luatex)
@@ -450,7 +457,9 @@
     "SPC ov" '(athena/open-tex-pdf    :which-key "pdf viewer")))
 
 ;; GPU time baybee
-(use-package cuda-mode)
+(use-package cuda-mode
+  :defer t)
 
 ;; crab rave
-(use-package rust-mode)
+(use-package rust-mode
+  :defer t)

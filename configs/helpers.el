@@ -68,3 +68,8 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (interactive)
   (TeX-master-file nil nil t)  ;; call to ask if necessary
   (TeX-command "LaTeX" #'TeX-master-file nil))
+
+(defun athena/nuke ()
+  (interactive)
+  (if (y-or-n-p "Are you sure?")
+      (dolist (cur (buffer-list)) (kill-buffer cur))))
