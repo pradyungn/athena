@@ -352,6 +352,14 @@
   :config
   (org-roam-setup))
 
+;; org roam UI
+(use-package org-roam-ui
+  :defer t
+  :after org-roam
+  :custom
+  (org-roam-ui-sync-theme t)
+  (org-roam-ui-update-on-save t))
+
 
 (font-lock-add-keywords 'org-mode
 			                  '(("^ *\\([-]\\) "
