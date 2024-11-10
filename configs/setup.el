@@ -39,7 +39,13 @@
   ;; (set-face-attribute 'fixed-pitch nil :font "PragmataPro Mono Liga" :height 130 :weight 'light)
   (set-face-attribute 'default nil        :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
   (set-face-attribute 'fixed-pitch nil    :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
-  (set-face-attribute 'variable-pitch nil :font "Crimson Text"             :height 130 :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "Crimson Text"             :height 130 :weight 'regular)
+
+  (setenv "LIBRARY_PATH" (string-join
+                          '("/opt/homebrew/opt/gcc/lib/gcc/14"
+                            "/opt/homebrew/opt/libgccjit/lib/gcc/14"
+                            "/opt/homebrew/opt/gcc/lib/gcc/14/gcc/aarch64-apple-darwin24/14")
+                          ":")))
 
 ;; prevent resize window on startup
 (setq frame-inhibit-implied-resize t)
@@ -109,3 +115,18 @@
     (fundamental-mode)))
 
 (add-hook 'find-file-hook 'athena/large-file-opt)
+
+;; install tool dependencies
+(let ((athena/bindir (concat user-emacs-directory "bin")))
+  (mkdir (concat athena/bindir "/verible") 'p-opt)
+  (add-to-list 'exec-path (concat athena/bindir "/verible"))
+  (when (not (executable-find "verible-verilog-format"))
+    (if (eq system-type 'darwin)
+        (url-copy-file "https://github.com/chipsalliance/verible/releases/download/v0.0-3836-g86ee9bab/verible-v0.0-3836-g86ee9bab-macOS.tar.gz"
+                       (concat athena/bindir "/verible.tar.gz") 'overwrite)
+      (url-copy-file "https://github.com/chipsalliance/verible/releases/download/v0.0-3836-g86ee9bab/verible-v0.0-3836-g86ee9bab-linux-static-x86_64.tar.gz"
+                     (concat athena/bindir "/verible.tar.gz") 'overwrite))
+    (call-process-shell-command (concat "tar -xzvf " athena/bindir
+                                        "/verible.tar.gz --strip-components=2 -C "
+                                        athena/bindir "/verible"))))
+

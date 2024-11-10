@@ -206,7 +206,6 @@
       (apheleia-mode)))
 
 (use-package apheleia
-  :defer t
   :hook
   (prog-mode . athena/format-hook))
 
@@ -238,26 +237,24 @@
   :defer t)
 
 ;; disabled while not properly configured
-;; (use-package verilog-ext
-;;   :custom
-;;   (verilog-ext-feature-list
-;;       '(font-lock
-;;         xref
-;;         hierarchy
-;;         navigation
-;;         template
-;;         hideshow
-;;         typedefs
-;;         time-stamp
-;;         block-end-comments
-;;         ports))
-;;   (verilog-ext-tags-backend 'tree-sitter)
-;;   (verilog-ext-hierarchy-backend 'tree-sitter)
-;;   (verilog-ext-hierarchy-frontend 'hierarchy)
-;;   :config
-;;   (verilog-ext-mode-setup)
-;;   :hook
-;;   (verilog-mode . verilog-ext-mode))
+(use-package verilog-ext
+  :custom
+  (verilog-ext-feature-list
+   '(font-lock
+     xref
+     hierarchy
+     navigation
+     template
+     hideshow
+     typedefs
+     time-stamp
+     block-end-comments
+     ports))
+  (verilog-ext-formatter-indentation-spaces 2)
+  :config
+  (verilog-ext-mode-setup)
+  :hook
+  (verilog-mode . verilog-ext-mode))
 
 ;; org mode!!
 (defun athena/org-init ()
