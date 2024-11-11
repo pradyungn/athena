@@ -64,7 +64,7 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom ((doom-modeline-height 40)
-	         (doom-modeline-bar-width 4)))
+	         (doom-modeline-bar-width 1)))
 
 (use-package hide-mode-line)
 
@@ -194,10 +194,10 @@
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
 
-;; path management
-(use-package exec-path-from-shell
-  :config
-  (exec-path-from-shell-initialize))
+;; path management - disabled to not clobber binary management
+;; (use-package exec-path-from-shell
+;;   :config
+;;   (exec-path-from-shell-initialize))
 
 ;; auto-format
 (setq athena/format-on-write-enable 1)
@@ -236,18 +236,17 @@
 (use-package verilog-mode
   :defer t)
 
-;; disabled while not properly configured
+;; more verilog features
 (use-package verilog-ext
   :custom
   (verilog-ext-feature-list
    '(font-lock
      xref
      hierarchy
-     navigation
      template
+     formatter
      hideshow
      typedefs
-     time-stamp
      block-end-comments
      ports))
   (verilog-ext-formatter-indentation-spaces 2)

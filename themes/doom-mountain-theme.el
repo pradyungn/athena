@@ -1,4 +1,4 @@
-;;; doom-mountain.el --- Mountain Theme for emacs -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; doom-mountain.el --- Mountain Theme for Doom Emacs -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;;; Commentary:
 ;;
@@ -187,13 +187,23 @@
                  (org-upcoming-deadline :foreground yellow)
                  (org-warning :foreground magenta)
 
+                 ;; Verilog-Ext Face Overrides
+                 (verilog-ext-font-lock-grouping-keywords-face :foreground yellow)
+                 (verilog-ext-font-lock-module-face :foreground dark-blue)
+                 (verilog-ext-font-lock-instance-face :foreground blue)
+                 (verilog-ext-font-lock-time-event-face :foreground yellow)
+                 (verilog-ext-font-lock-port-connection-face :foreground violet)
+                 (verilog-ext-font-lock-brackets-content-face :foreground orange)
+
                  ;; quotes
                  (highlight-quoted-symbol :foreground dark-cyan)
                  (highlight-quoted-quote  :foreground magenta)
 
                  ;;;; doom-modeline
                  (doom-modeline-buffer-path       :foreground violet :bold bold)
-                 (doom-modeline-buffer-major-mode :inherit 'doom-modeline-buffer-path))
+                 (doom-modeline-buffer-major-mode :inherit 'doom-modeline-buffer-path)
+                 (doom-modeline-bar               :background bg-alt)
+                 (doom-modeline-bar-inactive      :background bg-alt))
 
                 ;; --- variables --------------------------
                 ;; ()
