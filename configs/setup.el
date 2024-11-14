@@ -97,7 +97,7 @@
 (when (eq system-type 'gnu/linux)
   (setq athena/pdf-viewer "zathura"))
 (when (eq system-type 'darwin)
-  (setq athena/pdf-viewer 'open))
+  (setq athena/pdf-viewer "open"))
 
 ;; other random settings
 (setq undo-limit 80000000
@@ -116,17 +116,4 @@
 
 (add-hook 'find-file-hook 'athena/large-file-opt)
 
-;; install tool dependencies
-(let ((athena/bindir (concat user-emacs-directory "bin")))
-  (mkdir (concat athena/bindir "/verible") 'p-opt)
-  (add-to-list 'exec-path (concat athena/bindir "/verible"))
-  (when (not (executable-find "verible-verilog-format"))
-    (if (eq system-type 'darwin)
-        (url-copy-file "https://github.com/chipsalliance/verible/releases/download/v0.0-3836-g86ee9bab/verible-v0.0-3836-g86ee9bab-macOS.tar.gz"
-                       (concat athena/bindir "/verible.tar.gz") 'overwrite)
-      (url-copy-file "https://github.com/chipsalliance/verible/releases/download/v0.0-3836-g86ee9bab/verible-v0.0-3836-g86ee9bab-linux-static-x86_64.tar.gz"
-                     (concat athena/bindir "/verible.tar.gz") 'overwrite))
-    (call-process-shell-command (concat "tar -xzvf " athena/bindir
-                                        "/verible.tar.gz --strip-components=2 -C "
-                                        athena/bindir "/verible"))))
 
