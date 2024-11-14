@@ -106,6 +106,8 @@
 (delete-selection-mode 1)
 (setq backup-directory-alist `(("." . "~/.saves")))
 
+(setq help-window-keep-selected t)
+
 ;; preventing large file idiocies
 (defun athena/large-file-opt ()
   "If a file is over a given size, make the buffer read only."

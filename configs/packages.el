@@ -95,8 +95,12 @@
 	            ("C-r" . 'counsel-minibuffer-history)))
 
 ;; better help functions
+(defun athena/display-buffer-here (buffer)
+  (display-buffer-same-window buffer nil))
+
 (use-package helpful
   :custom
+  (helpful-switch-buffer-function 'athena/display-buffer-here)
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
   :bind
@@ -164,7 +168,8 @@
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
-;;                (display-buffer-in-side-window (side . bottom))))
+;;                (set-window-dedicated-p)))
+
 (add-hook 'vterm-mode-hook
           (lambda ()
             (setq config-kill-processes nil)
@@ -248,7 +253,14 @@
 
 ;; Verilog
 (use-package verilog-mode
-  :defer t)
+  :defer t
+  :custom
+  (verilog-case-indent 2)
+  (verilog-cexp-indent 2)
+  (verilog-indent-level 2)
+  (verilog-indent-level-module 2)
+  (verilog-indent-level-directive 2)
+  (verilog-indent-level-declaration 2))
 
 ;; more verilog features
 (use-package verilog-ext
@@ -258,7 +270,7 @@
      xref
      hierarchy
      template
-     formatter
+     ;; formatter
      hideshow
      typedefs
      block-end-comments
