@@ -1,8 +1,9 @@
-.DS_store
 /elpa
 /var
 /eln-cache
-custom.el
 /etc
-tramp
 /bin
+/tree-sitter
+custom.el
+tramp
+.DS_store

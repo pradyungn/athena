@@ -243,7 +243,7 @@
 (use-package markdown-mode
   :defer t
   :mode ("README\\.md\\'" . gfm-mode)
-  :hook (markdown-mode . visual-line-mode)
+  :hook (markdown-ts-mode . visual-line-mode)
   :init (setq markdown-command "multimarkdown")
   :bind (:map markdown-mode-map
 	            ("C-c C-e" . markdown-do)))
@@ -252,15 +252,19 @@
 (use-package outshine)
 
 ;; Verilog
-(use-package verilog-mode
+;; (use-package verilog-mode
+;;   :defer t
+;;   :custom
+;;   (verilog-case-indent 2)
+;;   (verilog-cexp-indent 2)
+;;   (verilog-indent-level 2)
+;;   (verilog-indent-level-module 2)
+;;   (verilog-indent-level-directive 2)
+;;   (verilog-indent-level-declaration 2))
+(use-package verilog-ts-mode
   :defer t
   :custom
-  (verilog-case-indent 2)
-  (verilog-cexp-indent 2)
-  (verilog-indent-level 2)
-  (verilog-indent-level-module 2)
-  (verilog-indent-level-directive 2)
-  (verilog-indent-level-declaration 2))
+  (verilog-ts-indent-level 2))
 
 ;; more verilog features
 (use-package verilog-ext
@@ -279,7 +283,7 @@
   :config
   (verilog-ext-mode-setup)
   :hook
-  (verilog-mode . verilog-ext-mode))
+  (verilog-ts-mode . verilog-ext-mode))
 
 ;; org mode!!
 (defun athena/org-init ()

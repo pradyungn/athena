@@ -118,4 +118,25 @@
 
 (add-hook 'find-file-hook 'athena/large-file-opt)
 
+;; treesitter grammars - install and default
+(setq treesit-language-source-alist
+      '((bash     . ("https://github.com/tree-sitter/tree-sitter-bash"))
+        (c        . ("https://github.com/tree-sitter/tree-sitter-c"))
+        (cpp      . ("https://github.com/tree-sitter/tree-sitter-cpp"))
+        (python   . ("https://github.com/tree-sitter/tree-sitter-python"))
+        (rust     . ("https://github.com/tree-sitter/tree-sitter-rust"))
+        (tcl      . ("https://github.com/tree-sitter-grammars/tree-sitter-tcl"))
+        (verilog  . ("https://github.com/tree-sitter/tree-sitter-verilog"))))
 
+(dolist (lang treesit-language-source-alist)
+  (when (not (treesit-language-available-p (car lang)))
+    (treesit-install-language-grammar (car lang))))
+
+(setq major-mode-remap-alist
+      '((bash-mode       . bash-ts-mode)
+        (c-mode          . c-ts-mode)
+        (c++-mode        . c++-ts-mode)
+        (python-mode     . python-ts-mode)
+        (rust-mode       . rust-ts-mode)
+        (tcl-mode        . tcl-ts-mode)
+        (verilog-mode    . verilog-ts-mode)))

@@ -187,13 +187,13 @@
                  (org-upcoming-deadline :foreground yellow)
                  (org-warning :foreground magenta)
 
-                 ;; Verilog-Ext Face Overrides
-                 (verilog-ext-font-lock-grouping-keywords-face :foreground yellow)
-                 (verilog-ext-font-lock-module-face :foreground dark-blue)
-                 (verilog-ext-font-lock-instance-face :foreground blue)
-                 (verilog-ext-font-lock-time-event-face :foreground yellow)
-                 (verilog-ext-font-lock-port-connection-face :foreground violet)
-                 (verilog-ext-font-lock-brackets-content-face :foreground orange)
+                 ;; Verilog-TS Face Overrides
+                 (verilog-ts-font-lock-grouping-keywords-face :foreground yellow)
+                 (verilog-ts-font-lock-module-face :foreground dark-blue)
+                 (verilog-ts-font-lock-instance-face :foreground blue)
+                 (verilog-ts-font-lock-time-event-face :foreground yellow)
+                 (verilog-ts-font-lock-port-connection-face :foreground violet)
+                 (verilog-ts-font-lock-brackets-content-face :foreground orange)
 
                  ;; quotes
                  (highlight-quoted-symbol :foreground dark-cyan)
