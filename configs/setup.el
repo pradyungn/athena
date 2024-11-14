@@ -126,7 +126,7 @@
         (python   . ("https://github.com/tree-sitter/tree-sitter-python"))
         (rust     . ("https://github.com/tree-sitter/tree-sitter-rust"))
         (tcl      . ("https://github.com/tree-sitter-grammars/tree-sitter-tcl"))
-        (verilog  . ("https://github.com/tree-sitter/tree-sitter-verilog"))))
+        (verilog  . ("https://github.com/gmlarumbe/tree-sitter-systemverilog"))))
 
 (dolist (lang treesit-language-source-alist)
   (when (not (treesit-language-available-p (car lang)))
