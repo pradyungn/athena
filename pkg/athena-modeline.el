@@ -46,15 +46,6 @@
 (defun athena-modeline/macro-hook (&rest _args)
   (force-mode-line-update))
 
-(add-hook 'window-configuration-change-hook #'athena-line-set-selected-window)
-(add-hook 'focus-in-hook #'athena-line-set-selected-window)
-(add-hook 'focus-out-hook #'athena-line-unset-selected-window)
-(advice-add 'handle-switch-frame :after #'athena-line-set-selected-window)
-(advice-add 'select-window :after #'athena-line-set-selected-window)
-
-(advice-add 'start-kbd-macro :after #'athena-modeline/macro-hook)
-(advice-add 'end-kbd-macro :after #'athena-modeline/macro-hook)
-
 ;; faces
 (defgroup athena nil
   "Faces intended for Athena Emacs")
@@ -101,10 +92,8 @@
                     :inherit 'bold)))
   "Emacs mode indicator face" :group 'athena)
 
-(defface athena/modeline-modified
-  `((t (:foreground "orange"
-                    :background ,(face-background 'mode-line)
-                    :inherit 'bold)))
+(defface athena/file-modified
+  `((t (:foreground "cyan" :background ,(face-background 'mode-line))))
   "Emacs mode indicator face" :group 'athena)
 
 (defface athena/modeline-recording
@@ -127,44 +116,73 @@
                       'athena/modeline-recording 'athena/modeline-evil-inactive))
     ""))
 
+;; (defun athena-modeline/file-changed ()
+;;   (if (buffer-file-name)
+;;       (if (file-has-changed-p (buffer-file-name)j
+;;           (concat "  " (propertize "󰜗" 'face `(:inherit ,(if (athena-line-selected-window-active-p)
+;;                                                              'athena/file-modified 'mode-line-inactive)
+;;                                                         :family ,nerd-icons-font-family))
+;;                   " ")
+;;         "  ")
+;;     "  "))
+
 ;; modeline magic
-(setq-default mode-line-format
-              (list
-               (propertize "\u200b" 'display '((raise -0.25) (height 1.5)))
-               '(:eval (cond
-                        ((eq evil-state 'emacs)
-                         (propertize "  E  " 'face
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/modeline-emacs 'athena/modeline-evil-inactive)))
-                        ((eq evil-state 'normal)
-                         (propertize "  N  " 'face
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/modeline-normal 'athena/modeline-evil-inactive)))
-                        ((eq evil-state 'insert)
-                         (propertize "  I  " 'face
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/modeline-insert 'athena/modeline-evil-inactive)))
-                        ((eq evil-state 'visual)
-                         (propertize "  V  " 'face
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/modeline-visual 'athena/modeline-evil-inactive)))
-                        ((eq evil-state 'replace)
-                         (propertize "  R  " 'face
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/modeline-remove 'athena/modeline-evil-inactive)))
-                        ((eq evil-state 'motion)
-                         (propertize "  M  " 'fac
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/mnodeline-motion 'athena/modeline-evil-inactive)))
-                        ((eq evil-state 'operator)
-                         (propertize "  O  " 'face
-                                     (if (athena-line-selected-window-active-p)
-                                         'athena/modeline-operator 'athena/modeline-evil-inactive)))
-                        (t " ? ")))
-               `(:eval (athena-modeline/modeline-macro-recording))
-               `(:eval (propertize "  %b" 'face 'bold 'help-echo (buffer-file-name)))
-               `(:eval (propertize " " 'display `(space :align-to
-                                                        (- (+ right right-fringe right-margin)
-                                                           ,(+ 2 (length (athena-mode-name)))))))
-               '(:eval (athena-mode-name))))
+(defun athena-modeline ()
+  (interactive)
+  (add-hook 'window-configuration-change-hook #'athena-line-set-selected-window)
+  (add-hook 'focus-in-hook #'athena-line-set-selected-window)
+  (add-hook 'focus-out-hook #'athena-line-unset-selected-window)
+  (advice-add 'handle-switch-frame :after #'athena-line-set-selected-window)
+  (advice-add 'select-window :after #'athena-line-set-selected-window)
+
+  (advice-add 'start-kbd-macro :after #'athena-modeline/macro-hook)
+  (advice-add 'end-kbd-macro :after #'athena-modeline/macro-hook)
+
+  (setq-default mode-line-format
+                (list
+                 (propertize "\u200b" 'display '((raise -0.25) (height 1.5)))
+                 '(:eval (cond
+                          ((eq evil-state 'emacs)
+                           (propertize "  E  " 'face
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/modeline-emacs 'athena/modeline-evil-inactive)))
+                          ((eq evil-state 'normal)
+                           (propertize "  N  " 'face
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/modeline-normal 'athena/modeline-evil-inactive)))
+                          ((eq evil-state 'insert)
+                           (propertize "  I  " 'face
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/modeline-insert 'athena/modeline-evil-inactive)))
+                          ((eq evil-state 'visual)
+                           (propertize "  V  " 'face
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/modeline-visual 'athena/modeline-evil-inactive)))
+                          ((eq evil-state 'replace)
+                           (propertize "  R  " 'face
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/modeline-remove 'athena/modeline-evil-inactive)))
+                          ((eq evil-state 'motion)
+                           (propertize "  M  " 'fac
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/mnodeline-motion 'athena/modeline-evil-inactive)))
+                          ((eq evil-state 'operator)
+                           (propertize "  O  " 'face
+                                       (if (athena-line-selected-window-active-p)
+                                           'athena/modeline-operator 'athena/modeline-evil-inactive)))
+                          (t " ? ")))
+                 `(:eval (athena-modeline/modeline-macro-recording))
+                 ;; `(:eval (athena-modeline/file-changed))
+                 "  "
+                 `(:eval (propertize "%b" 'face (if (buffer-modified-p) 'bold-italic 'bold) 'help-echo (buffer-file-name)))
+                 "  %l:%c"
+                 `(:eval (propertize " " 'display `(space :align-to
+                                                          (- (+ right right-fringe right-margin)
+                                                             ,(+ 2 (length (athena-mode-name)))))))
+                 '(:eval (athena-mode-name))))
+
+  (setq mode-line-format (default-value 'mode-line-format)))
+
+(athena-modeline)
+
 (provide 'athena-modeline)
