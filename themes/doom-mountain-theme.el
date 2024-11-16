@@ -117,11 +117,9 @@
                  ((line-number-current-line &override) :background bg :foreground blue :bold bold)
 
                  (mode-line
-                  :background modeline-bg :foreground modeline-fg
-                  :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg)))
+                  :background modeline-bg :foreground modeline-fg)
                  (mode-line-inactive
-                  :background modeline-bg-alt :foreground modeline-fg-alt
-                  :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-alt)))
+                  :background modeline-bg-alt :foreground modeline-fg-alt)
 
                  ;;;; rainbow-delimiters
                  (rainbow-delimiters-depth-1-face :foreground violet)
@@ -203,10 +201,17 @@
                  (doom-modeline-buffer-path       :foreground violet :bold bold)
                  (doom-modeline-buffer-major-mode :inherit 'doom-modeline-buffer-path)
                  (doom-modeline-bar               :background bg-alt)
-                 (doom-modeline-bar-inactive      :background bg-alt))
+                 (doom-modeline-bar-inactive      :background bg-alt)
 
-                ;; --- variables --------------------------
-                ;; ()
+                 (athena/modeline-normal   :foreground bg :background green        :bold bold)
+                 (athena/modeline-visual   :foreground bg :background dark-blue    :bold bold)
+                 (athena/modeline-insert   :foreground bg :background yellow       :bold bold)
+                 (athena/modeline-remove   :foreground bg :background red          :bold bold)
+                 (athena/modeline-emacs    :foreground bg :background violet       :bold bold)
+                 (athena/modeline-motion   :foreground bg :background dark-cyan    :bold bold)
+                 (athena/modeline-operator :foreground bg :background dark-cyan    :bold bold)
+                 (athena/modeline-evil-inactive :foreground base1 :background base4 :bold bold)
+                 (athena/modeline-recording :foreground bg :background magenta :bold bold))
                 )
 
 ;;; doom-mountain.el ends here

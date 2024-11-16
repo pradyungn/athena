@@ -1,4 +1,4 @@
-;;; -- Settings and Setup --
+;;; -- Settings and Setup --  -*- lexical-binding: t; -*-
 ;; (setq gc-cons-threshold most-positive-fixnum)
 ;; (add-hook 'emacs-startup-hook
 ;; 	        (lambda ()
@@ -30,16 +30,24 @@
 
 ;; fonts
 (when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil        :font "Myosevka Semi-Condensed" :height 110 :weight 'regular)
-  (set-face-attribute 'fixed-pitch nil    :font "Myosevka Semi-Condensed" :height 110 :weight 'regular)
-  (set-face-attribute 'variable-pitch nil :font "Crimson Text"             :height 110 :weight 'regular))
+  ;; (set-face-attribute 'default nil        :family "PragmataPro"
+  ;;                     :height 110 :weight 'regular)
+  ;; (set-face-attribute 'fixed-pitch nil    :family "PragmataPro"
+  ;;                     :height 110 :weight 'regular)
+  (set-face-attribute 'default nil        :family "Myosevka"
+                      :height 110 :weight 'regular :width 'semi-condensed)
+  (set-face-attribute 'fixed-pitch nil    :family "Myosevka"
+                      :height 110 :weight 'regular :width 'semi-condensed)
+  (set-face-attribute 'variable-pitch nil :family "Crimson Text"
+                      :height 110 :weight 'regular))
 
 (when (eq system-type 'darwin)
-  ;; (set-face-attribute 'default nil :font "PragmataPro Mono Liga" :height 130 :weight 'light)
-  ;; (set-face-attribute 'fixed-pitch nil :font "PragmataPro Mono Liga" :height 130 :weight 'light)
-  (set-face-attribute 'default nil        :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
-  (set-face-attribute 'fixed-pitch nil    :font "Myosevka Semi-Condensed" :height 130 :weight 'light)
-  (set-face-attribute 'variable-pitch nil :font "Crimson Text"             :height 130 :weight 'regular)
+  (set-face-attribute 'default nil        :family "Myosevka"
+                      :height 130 :weight 'regular :width 'semi-condensed)
+  (set-face-attribute 'fixed-pitch nil    :family "Myosevka"
+                      :height 130 :weight 'regular :width 'semi-condensed)
+  (set-face-attribute 'variable-pitch nil :family "Crimson Text"
+                      :height 130 :weight 'regular)
 
   (setenv "LIBRARY_PATH" (string-join
                           '("/opt/homebrew/opt/gcc/lib/gcc/14"
@@ -92,6 +100,10 @@
 
 ;; Better window titling
 (setq frame-title-format "Emacs (%b)")
+
+;; Window bordering
+(setq window-divider-default-places nil)
+(window-divider-mode)
 
 ;; set default PDF viewer
 (when (eq system-type 'gnu/linux)

@@ -57,16 +57,17 @@
   (doom-themes-org-config))
 
 ;; Icons
-;; (use-package all-the-icons)
 (use-package nerd-icons)
 
 ;; Default Modeline
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :custom ((doom-modeline-height 40)
-	         (doom-modeline-bar-width 1)))
+;; (use-package doom-modeline
+;;   :init (doom-modeline-mode 1)
+;;   :custom ((doom-modeline-height 40)
+;; 	         (doom-modeline-bar-width 1)))
 
-(use-package hide-mode-line)
+;; (use-package hide-mode-line)
+
+(require 'athena-modeline)
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
@@ -160,11 +161,10 @@
 ;; vterm - config stolen from doom emacs
 (use-package vterm
   :hook (vterm-mode . hide-mode-line-mode)
-  :config
-  (setq vterm-kill-buffer-on-exit t)
-  (setq vterm-max-scrollback 5000)
+  :custom
   ;;(setq vterm-buffer-name-string "term %s")
-  )
+  (vterm-kill-buffer-on-exit t)
+  (vterm-max-scrollback 5000))
 
 ;; (add-to-list 'display-buffer-alist
 ;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
@@ -172,8 +172,9 @@
 
 (add-hook 'vterm-mode-hook
           (lambda ()
-            (setq config-kill-processes nil)
             (setq hscroll-margin 0)
+            (set-frame-parameter nil 'bottom-divider-width 1)
+            (setq config-kill-processes nil)
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
@@ -280,6 +281,7 @@
      block-end-comments
      ports))
   (verilog-ext-formatter-indentation-spaces 2)
+  (verilog-ext-formatter-wrap-spaces 2)
   :config
   (verilog-ext-mode-setup)
   :hook
