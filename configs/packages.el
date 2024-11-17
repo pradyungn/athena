@@ -2,11 +2,7 @@
 
 ;; index local packages
 (add-to-list 'load-path (concat user-emacs-directory "pkg"))
-
-;; garbage collector magic hack
-;; via https://akrl.sdf.org
-(require 'gcmh)
-(gcmh-mode 1)
+(byte-recompile-directory (concat user-emacs-directory "pkg") 0)
 
 ;; package manager
 (require 'package)
@@ -26,6 +22,12 @@
 ;; make sure all used packages are installed
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; garbage collector magic hack
+;; via https://akrl.sdf.org
+(use-package gcmh
+  :ensure nil)
+(gcmh-mode 1)
 
 ;; replace default emacs functionality with saner alternatives
 (use-package swiper)
@@ -59,15 +61,17 @@
 ;; Icons
 (use-package nerd-icons)
 
-;; Default Modeline
+;; Doom Modeline
 ;; (use-package doom-modeline
 ;;   :init (doom-modeline-mode 1)
 ;;   :custom ((doom-modeline-height 40)
 ;; 	         (doom-modeline-bar-width 1)))
 
-;; (use-package hide-mode-line)
-
-(require 'athena-modeline)
+;; Athena Modeline
+(use-package athena-modeline
+  :ensure nil
+  :config
+  (athena-modeline))
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
@@ -160,7 +164,6 @@
 
 ;; vterm - config stolen from doom emacs
 (use-package vterm
-  :hook (vterm-mode . hide-mode-line-mode)
   :custom
   ;;(setq vterm-buffer-name-string "term %s")
   (vterm-kill-buffer-on-exit t)
@@ -172,6 +175,7 @@
 
 (add-hook 'vterm-mode-hook
           (lambda ()
+            (setq mode-line-format nil)
             (setq hscroll-margin 0)
             (set-frame-parameter nil 'bottom-divider-width 1)
             (setq config-kill-processes nil)
@@ -377,6 +381,7 @@
 (use-package org-roam
   :custom
   (org-roam-directory "~/Documents/Notes/Roam")
+  (org-roam-database-connector 'sqlite-builtin)
   :config
   (org-roam-setup))
 
@@ -445,8 +450,7 @@
 			                        (get-buffer-create "*dashboard*")
 			                        (dashboard-open)))
 
-(defun athena/dired-init ()
-  (require 'dired+)
+(defun athena/diredp-init ()
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'diredp-up-directory-reuse-dir-buffer
     "l" 'diredp-find-file-reuse-dir-buffer)
@@ -458,8 +462,12 @@
   :ensure nil
   :custom ((dired-listing-switches "-agho --group-directories-first")
            (insert-directory-program (if (eq system-type 'darwin) "gls" "ls"))
-           (dired-use-ls-dired (eq system-type 'darwin)))
-  :config (athena/dired-init))
+           (dired-use-ls-dired (eq system-type 'darwin))))
+
+(use-package dired+
+  :ensure nil
+  :after dired
+  :config (athena/diredp-init))
 
 (use-package nerd-icons-dired
   :if

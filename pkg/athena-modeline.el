@@ -5,6 +5,7 @@
 ;; This file takes inspiration from Nicolas Rougier's infamous
 ;; nano-modeline and heavy snippets from occasionallyathena's as well.
 ;; -------------------------------------------------------------------
+(require 'nerd-icons)
 (defun vc-branch ()
   (if vc-mode
       (let ((backend (vc-backend buffer-file-name)))
@@ -14,6 +15,7 @@
 (defun athena-mode-name ()
   (if (listp mode-name) (car mode-name) mode-name))
 
+(defvar athena-line-selected-window (frame-selected-window))
 (defun athena-line-selected-window-active-p ()
   (eq athena-line-selected-window (selected-window)))
 
@@ -33,11 +35,14 @@
     output))
 
 ;; hooking to determine "active" window
-(defvar athena-line-selected-window (frame-selected-window))
 (defun athena-line-set-selected-window (&rest _args)
-  (when (not (minibuffer-window-active-p (frame-selected-window)))
-    (setq athena-line-selected-window (frame-selected-window))
-    (force-mode-line-update)))
+  (if (frame-focus-state)
+      (when (not (minibuffer-window-active-p (frame-selected-window)))
+        (setq athena-line-selected-window (frame-selected-window))
+        (force-mode-line-update))
+    (progn
+      (setq athena-line-selected-window nil)
+      (force-mode-line-update))))
 
 (defun athena-line-unset-selected-window ()
   (setq athena-line-selected-window nil)
@@ -48,7 +53,8 @@
 
 ;; faces
 (defgroup athena nil
-  "Faces intended for Athena Emacs")
+  "Faces intended for Athena Emacs"
+  :group 'convenience)
 
 (defface athena/modeline-normal
   `((t (:foreground ,(face-background 'default)
@@ -92,9 +98,13 @@
                     :inherit 'bold)))
   "Emacs mode indicator face" :group 'athena)
 
-(defface athena/file-modified
+(defface athena/file-stale
   `((t (:foreground "cyan" :background ,(face-background 'mode-line))))
-  "Emacs mode indicator face" :group 'athena)
+  "Stale file icon face" :group 'athena)
+
+(defface athena/file-remote
+  `((t (:foreground "purple" :background ,(face-background 'mode-line))))
+  "TRAMP indicator face" :group 'athena)
 
 (defface athena/modeline-recording
   `((t (:foreground ,(face-background 'default)
@@ -126,17 +136,29 @@
 ;;         "  ")
 ;;     "  "))
 
+(defun athena-modeline/file-is-remote ()
+  (if (file-remote-p default-directory)
+      (concat " "
+              (propertize "󰒋" 'face
+                          `(:inherit ,(if (athena-line-selected-window-active-p)
+                                          'athena/file-remote
+                                        'mode-line-inactive)
+                                     :family ,nerd-icons-font-family))
+              " ")))
+
+
 ;; modeline magic
 (defun athena-modeline ()
   (interactive)
   (add-hook 'window-configuration-change-hook #'athena-line-set-selected-window)
-  (add-hook 'focus-in-hook #'athena-line-set-selected-window)
-  (add-hook 'focus-out-hook #'athena-line-unset-selected-window)
-  (advice-add 'handle-switch-frame :after #'athena-line-set-selected-window)
+  (add-hook 'after-change-major-mode-hook #'athena-modeline/macro-hook)
+  (add-function :after after-focus-change-function #'athena-line-set-selected-window)
+
   (advice-add 'select-window :after #'athena-line-set-selected-window)
+  (advice-add 'handle-switch-frame :after #'athena-line-set-selected-window)
 
   (advice-add 'start-kbd-macro :after #'athena-modeline/macro-hook)
-  (advice-add 'end-kbd-macro :after #'athena-modeline/macro-hook)
+  (advice-add 'end-kbd-macro   :after #'athena-modeline/macro-hook)
 
   (setq-default mode-line-format
                 (list
@@ -163,9 +185,9 @@
                                        (if (athena-line-selected-window-active-p)
                                            'athena/modeline-remove 'athena/modeline-evil-inactive)))
                           ((eq evil-state 'motion)
-                           (propertize "  M  " 'fac
+                           (propertize "  N  " 'fac
                                        (if (athena-line-selected-window-active-p)
-                                           'athena/mnodeline-motion 'athena/modeline-evil-inactive)))
+                                           'athena/modeline-normal 'athena/modeline-evil-inactive)))
                           ((eq evil-state 'operator)
                            (propertize "  O  " 'face
                                        (if (athena-line-selected-window-active-p)
@@ -178,11 +200,13 @@
                  "  %l:%c"
                  `(:eval (propertize " " 'display `(space :align-to
                                                           (- (+ right right-fringe right-margin)
-                                                             ,(+ 2 (length (athena-mode-name)))))))
+                                                             ,(+ 2 (if (athena-modeline/file-is-remote) 4 0)
+                                                                 (length (athena-mode-name)))))))
+                 '(:eval (athena-modeline/file-is-remote))
                  '(:eval (athena-mode-name))))
 
-  (setq mode-line-format (default-value 'mode-line-format)))
-
-(athena-modeline)
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (setq mode-line-format (default-value 'mode-line-format)))))
 
 (provide 'athena-modeline)

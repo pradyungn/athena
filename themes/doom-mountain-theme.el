@@ -203,7 +203,8 @@
                  (doom-modeline-bar               :background bg-alt)
                  (doom-modeline-bar-inactive      :background bg-alt)
 
-                 (athena/file-modified     :foreground dark-cyan :background bg-alt)
+                 (athena/file-remote       :foreground violet :background bg-alt)
+                 (athena/file-stale        :foreground dark-cyan :background bg-alt)
                  (athena/modeline-normal   :foreground bg :background green        :bold bold)
                  (athena/modeline-visual   :foreground bg :background dark-blue    :bold bold)
                  (athena/modeline-insert   :foreground bg :background yellow       :bold bold)
