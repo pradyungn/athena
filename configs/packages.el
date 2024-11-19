@@ -69,6 +69,7 @@
 
 ;; Athena Modeline
 (use-package athena-modeline
+  :after nerd-icons
   :ensure nil
   :config
   (athena-modeline))

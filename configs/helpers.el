@@ -53,10 +53,11 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
 ;; pdf viewer
 (defun athena/open-pdf (ext)
   (let ((filename (buffer-file-name)))
-    (if (and filename (s-ends-with-p ext filename))
+    (if (and filename (string-suffix-p ext filename))
         (let ((pdffile
                (concat (string-trim-right filename ext) ".pdf")))
-          (call-process-shell-command (concat athena/pdf-viewer " '" pdffile "' &") nil 0)))))
+          (call-process-shell-command (concat athena/pdf-viewer " '" pdffile "' &") nil 0))
+      (message "Buffer file does not match intended file extension"))))
 
 (defun athena/open-org-pdf ()
   (interactive) (athena/open-pdf ".org"))

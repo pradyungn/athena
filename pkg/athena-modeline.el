@@ -6,6 +6,7 @@
 ;; nano-modeline and heavy snippets from occasionallyathena's as well.
 ;; -------------------------------------------------------------------
 (require 'nerd-icons)
+
 (defun vc-branch ()
   (if vc-mode
       (let ((backend (vc-backend buffer-file-name)))
@@ -13,7 +14,8 @@
                                              (+ (if (eq backend 'Hg) 2 3) 2))))  nil))
 
 (defun athena-mode-name ()
-  (if (listp mode-name) (car mode-name) mode-name))
+  (propertize (if (listp mode-name) (car mode-name) mode-name)
+              'help-echo (symbol-name major-mode)))
 
 (defvar athena-line-selected-window (frame-selected-window))
 (defun athena-line-selected-window-active-p ()
@@ -138,14 +140,66 @@
 
 (defun athena-modeline/file-is-remote ()
   (if (file-remote-p default-directory)
-      (concat " "
-              (propertize "󰒋" 'face
+      (concat (propertize "󰒋" 'face
                           `(:inherit ,(if (athena-line-selected-window-active-p)
                                           'athena/file-remote
                                         'mode-line-inactive)
                                      :family ,nerd-icons-font-family))
               " ")))
 
+(defun athena-modeline/file-icon ()
+  (if (nerd-icons-icon-for-mode major-mode)
+      (concat
+       (apply 'propertize
+              (append
+               `(,(nerd-icons-icon-for-mode major-mode))
+               (if (athena-line-selected-window-active-p)
+                   '(font-lock-face `(:height 1.0))
+                 `(face ,`(:family ,nerd-icons-font-family :height 1.0 :inherit mode-line-inactive)))))
+       " ")
+    ""))
+
+(defun athena-modeline/right-segments ()
+  (concat (athena-modeline/file-is-remote)
+          (athena-modeline/file-icon)
+          (athena-mode-name)))
+
+(defun athena-modeline/right-segments-length ()
+  (+ (if (athena-modeline/file-is-remote) 3 0)
+     (if (athena-modeline/file-icon)      3 0)
+     (length (athena-mode-name))))
+
+(defun athena-modeline/evil-state-segment ()
+  (cond
+   ((eq evil-state 'emacs)
+    (propertize "  E  " 'face
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-emacs 'athena/modeline-evil-inactive)))
+   ((eq evil-state 'normal)
+    (propertize "  N  " 'face
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-normal 'athena/modeline-evil-inactive)))
+   ((eq evil-state 'insert)
+    (propertize "  I  " 'face
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-insert 'athena/modeline-evil-inactive)))
+   ((eq evil-state 'visual)
+    (propertize "  V  " 'face
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-visual 'athena/modeline-evil-inactive)))
+   ((eq evil-state 'replace)
+    (propertize "  R  " 'face
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-remove 'athena/modeline-evil-inactive)))
+   ((eq evil-state 'motion)
+    (propertize "  N  " 'fac
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-normal 'athena/modeline-evil-inactive)))
+   ((eq evil-state 'operator)
+    (propertize "  O  " 'face
+                (if (athena-line-selected-window-active-p)
+                    'athena/modeline-operator 'athena/modeline-evil-inactive)))
+   (t " ? ")))
 
 ;; modeline magic
 (defun athena-modeline ()
@@ -163,36 +217,7 @@
   (setq-default mode-line-format
                 (list
                  (propertize "\u200b" 'display '((raise -0.25) (height 1.5)))
-                 '(:eval (cond
-                          ((eq evil-state 'emacs)
-                           (propertize "  E  " 'face
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-emacs 'athena/modeline-evil-inactive)))
-                          ((eq evil-state 'normal)
-                           (propertize "  N  " 'face
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-normal 'athena/modeline-evil-inactive)))
-                          ((eq evil-state 'insert)
-                           (propertize "  I  " 'face
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-insert 'athena/modeline-evil-inactive)))
-                          ((eq evil-state 'visual)
-                           (propertize "  V  " 'face
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-visual 'athena/modeline-evil-inactive)))
-                          ((eq evil-state 'replace)
-                           (propertize "  R  " 'face
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-remove 'athena/modeline-evil-inactive)))
-                          ((eq evil-state 'motion)
-                           (propertize "  N  " 'fac
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-normal 'athena/modeline-evil-inactive)))
-                          ((eq evil-state 'operator)
-                           (propertize "  O  " 'face
-                                       (if (athena-line-selected-window-active-p)
-                                           'athena/modeline-operator 'athena/modeline-evil-inactive)))
-                          (t " ? ")))
+                 '(:eval (athena-modeline/evil-state-segment))
                  `(:eval (athena-modeline/modeline-macro-recording))
                  ;; `(:eval (athena-modeline/file-changed))
                  "  "
@@ -200,10 +225,8 @@
                  "  %l:%c"
                  `(:eval (propertize " " 'display `(space :align-to
                                                           (- (+ right right-fringe right-margin)
-                                                             ,(+ 2 (if (athena-modeline/file-is-remote) 4 0)
-                                                                 (length (athena-mode-name)))))))
-                 '(:eval (athena-modeline/file-is-remote))
-                 '(:eval (athena-mode-name))))
+                                                             2 ,(athena-modeline/right-segments-length)))))
+                 '(:eval (athena-modeline/right-segments))))
 
   (dolist (buf (buffer-list))
     (with-current-buffer buf
