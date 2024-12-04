@@ -258,18 +258,15 @@
 (use-package outshine)
 
 ;; Verilog
-;; (use-package verilog-mode
-;;   :defer t
-;;   :custom
-;;   (verilog-case-indent 2)
-;;   (verilog-cexp-indent 2)
-;;   (verilog-indent-level 2)
-;;   (verilog-indent-level-module 2)
-;;   (verilog-indent-level-directive 2)
-;;   (verilog-indent-level-declaration 2))
 (use-package verilog-ts-mode
   :defer t
   :custom
+  (verilog-case-indent 2)
+  (verilog-cexp-indent 2)
+  (verilog-indent-level 2)
+  (verilog-indent-level-module 2)
+  (verilog-indent-level-directive 2)
+  (verilog-indent-level-declaration 2)
   (verilog-ts-indent-level 2))
 
 ;; more verilog features
