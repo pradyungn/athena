@@ -46,7 +46,7 @@
 	            ("C-k" . ivy-previous-line)
 	            ("C-d" . ivy-reverse-i-search-kill))
   :custom
-  (ivy-use-virtual-buffers t)
+  ;; (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) ")
   :config
   (ivy-mode 1))
@@ -496,6 +496,7 @@
   :config
   (general-def 'normal TeX-mode-map
     "SPC op" '(athena/compile-tex-pdf :which-key "pdf export")
+    "SPC ob" '(athena/compile-tex-bib :which-key "pdf export")
     "SPC ov" '(athena/open-tex-pdf    :which-key "pdf viewer")))
 
 ;; GPU time baybee

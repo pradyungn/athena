@@ -144,11 +144,13 @@
   (when (not (treesit-language-available-p (car lang)))
     (treesit-install-language-grammar (car lang))))
 
-(setq major-mode-remap-alist
-      '((bash-mode       . bash-ts-mode)
-        (c-mode          . c-ts-mode)
-        (c++-mode        . c++-ts-mode)
-        (python-mode     . python-ts-mode)
-        (rust-mode       . rust-ts-mode)
-        (tcl-mode        . tcl-ts-mode)
-        (verilog-mode    . verilog-ts-mode)))
+(let ((new-major-mode-remap-alist
+       '((bash-mode       . bash-ts-mode)
+         (c-mode          . c-ts-mode)
+         (c++-mode        . c++-ts-mode)
+         (python-mode     . python-ts-mode)
+         (rust-mode       . rust-ts-mode)
+         (tcl-mode        . tcl-ts-mode)
+         (verilog-mode    . verilog-ts-mode))))
+  (dolist (mode new-major-mode-remap-alist)
+    (add-to-list 'major-mode-remap-alist mode)))

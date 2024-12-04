@@ -26,7 +26,7 @@
  "M-;" 'shell-command)
 
 ;; Ivy shortcut
-(general-def ivy-mode-map
+(general-def ivy-minibuffer-map
   "C-;" 'ivy-immediate-done)
 
 ;; org-roam keybinds
@@ -92,6 +92,7 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   "bc" '(clone-indirect-buffer              :which-key "clone buffer")
   "bs" '(clone-indirect-buffer-other-window :which-key "split buffer")
   "bm" '(counsel-bookmark                   :which-key "bookmarks")
+  "br" '(counsel-recentf                    :which-key "buffer hist")
   "bd" '(diff-buffers                       :which-key "diff")
 
   ;; projectile

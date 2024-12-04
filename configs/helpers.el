@@ -70,6 +70,11 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (TeX-master-file nil nil t)  ;; call to ask if necessary
   (TeX-command "LaTeX" #'TeX-master-file nil))
 
+(defun athena/compile-tex-bib ()
+  (interactive)
+  (TeX-master-file nil nil t)  ;; call to ask if necessary
+  (TeX-command "Biber" #'TeX-master-file nil))
+
 (defun athena/nuke ()
   (interactive)
   (if (y-or-n-p "Are you sure?")
