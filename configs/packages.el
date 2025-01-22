@@ -324,7 +324,6 @@
 (use-package org
   :pin org
   :hook (org-mode . athena/org-init)
-
   :config
   (athena/org-fonts)
   (add-to-list 'org-modules 'org-tempo)
@@ -338,6 +337,7 @@
     "SPC ov" '(athena/open-org-pdf      :which-key "pdf viewer"))
 
   :custom
+  (org-latex-compiler "xelatex")
   (org-startup-folded t)
   (org-capture-bookmark nil)
   (org-hide-leading-stars t)
@@ -345,8 +345,7 @@
   (org-latex-pdf-process
    '("xelatex -interaction nonstopmode -output-directory %o %f"
      "bibtex %b"
-     "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-     "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+     "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-babel-python-command "python3")
   (org-agenda-files '("~/Documents/Notes/Roam/main/"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
@@ -491,7 +490,7 @@
   :defer t
   :ensure auctex
   :custom
-  (TeX-engine 'luatex)
+  (TeX-engine 'xetex)
   (TeX-PDF-mode t)
   :config
   (general-def 'normal TeX-mode-map
@@ -506,3 +505,8 @@
 ;; crab rave
 (use-package rust-mode
   :defer t)
+
+;; embrace the darkness
+(use-package scala-mode
+  :interpreter
+    ("scala" . scala-mode))
