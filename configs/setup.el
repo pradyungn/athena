@@ -57,7 +57,7 @@
 
 ;; prevent resize window on startup
 (setq frame-inhibit-implied-resize t)
-(add-to-list 'initial-frame-alist '(internal-border-width . 20))
+(add-to-list 'default-frame-alist '(internal-border-width . 20))
 
 ;; smooth scroll settings - pulled from emacs wiki
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
