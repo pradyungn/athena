@@ -79,3 +79,10 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (interactive)
   (if (y-or-n-p "Are you sure?")
       (dolist (cur (buffer-list)) (kill-buffer cur))))
+
+(defun athena/dired-open-in-system ()
+  (interactive)
+  (let ((filename (dired-filename-at-point)))
+    (if filename
+        (call-process-shell-command (concat "gio open '" filename "' &") nil 0)
+      (message "No file associated with buffer"))))

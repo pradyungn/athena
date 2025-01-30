@@ -225,14 +225,14 @@
                                         athena/bindir "/verible"))))
 
 ;; auto-format
-(setq athena/format-on-write-enable 1)
-(defun athena/format-hook ()
-  (if (> athena/format-on-write-enable 0)
-      (apheleia-mode)))
+;; (setq athena/format-on-write-enable 1)
+;; (defun athena/format-hook ()
+;;   (if (> athena/format-on-write-enable 0)
+;;       (apheleia-mode)))
 
-(use-package apheleia
-  :hook
-  (prog-mode . athena/format-hook))
+;; (use-package apheleia
+;;   :hook
+;;   (prog-mode . athena/format-hook))
 
 ;; magit
 (use-package magit
@@ -450,7 +450,8 @@
 (defun athena/diredp-init ()
   (evil-collection-define-key 'normal 'dired-mode-map
     "h" 'diredp-up-directory-reuse-dir-buffer
-    "l" 'diredp-find-file-reuse-dir-buffer)
+    "l" 'diredp-find-file-reuse-dir-buffer
+    "s" 'athena/dired-open-in-system)
   (diredp-toggle-find-file-reuse-dir 1)
   (setq diredp-hide-details-initially-flag nil)
   (setq diredp-hide-details-propagate-flag nil))
@@ -504,9 +505,11 @@
 
 ;; crab rave
 (use-package rust-mode
-  :defer t)
+  :defer t
+  :custom
+  (rust-ts-mode-indent-offset 2))
 
 ;; embrace the darkness
 (use-package scala-mode
   :interpreter
-    ("scala" . scala-mode))
+  ("scala" . scala-mode))
