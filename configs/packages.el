@@ -513,3 +513,14 @@
 (use-package scala-mode
   :interpreter
   ("scala" . scala-mode))
+
+;; return to monke, embrace RSS
+(defun athena/elfeed-show-config ()
+  (visual-line-mode 1)
+  (display-line-numbers-mode -1))
+
+(use-package elfeed
+  :hook
+  (elfeed-show-mode . athena/elfeed-show-config)
+  :custom
+  (elfeed-feeds '("https://chrisdone.com/rss.xml")))
