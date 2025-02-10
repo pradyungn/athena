@@ -107,9 +107,11 @@
 
 ;; set default PDF viewer
 (when (eq system-type 'gnu/linux)
-  (setq athena/pdf-viewer "zathura"))
+  (setq athena/pdf-viewer "zathura")
+  (setq athena/system-open "gio open"))
 (when (eq system-type 'darwin)
-  (setq athena/pdf-viewer "open"))
+  (setq athena/pdf-viewer "open")
+  (setq athena/system-open "open"))
 
 ;; other random settings
 (setq undo-limit 80000000

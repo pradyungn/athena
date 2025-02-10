@@ -84,5 +84,5 @@ the only window, use evil-window-move-* (e.g. `evil-window-move-far-left')."
   (interactive)
   (let ((filename (dired-filename-at-point)))
     (if filename
-        (call-process-shell-command (concat "gio open '" filename "' &") nil 0)
+        (call-process-shell-command (concat athena/system-open " '" filename "' &") nil 0)
       (message "No file associated with buffer"))))
