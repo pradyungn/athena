@@ -53,3 +53,6 @@ Keybinds are mostly located in =/configs/keybinds.el= and are maintained using g
 There are more keybinds that I've not documented here, and I encourage you to discover them by either using the config or by reading the files in the =/configs= directory. An editor configuration is best used when you understand how it works, and I've done my best to make it transparent how this one does. My main gripe with Doom Emacs was obfuscation of all the various settings and defaults under the hood, and I hope that this is not the case with mine.
 
 As an aside, the default theme for my configuration is [[https://github.com/mountain-theme/Mountain][Mountain]], my own colorscheme. This is loaded via the =doom-themes= package, so you should be able to use any doom theme. The caveat here is that I use a custom modeline that hardcodes in colors from the Mountain theme. There is a commented region above my modeline's use-package that includes default settings to use =doom-modeline= instead - this should be compatible with whatever colorscheme you choose to use.
+
+** Splash Screen
+[[./splash.png]]
