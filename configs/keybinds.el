@@ -75,10 +75,10 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
 (athena/leader-keys
   ;; top-level shortcuts (reserved for very useful stuff)
   "SPC" '(athena/find-file   :which-key "dynamic file-find")
-  "j"   '(swiper             :which-key "better search")
   "."   '(find-file          :which-key "file finder")
   "/"   '(projectile-ripgrep :which-key "rg nyoom")
   ";"   '(counsel-M-x        :which-key "M-x")
+  "j"   '(swiper             :which-key "better search")
 
   ;; Hydras (fancy multilevel chords)
   "w" '(athena/win-map/body :which-key "window management")

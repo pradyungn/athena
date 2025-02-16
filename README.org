@@ -1,0 +1,55 @@
+#+title: Athena
+#+subtitle: A sane emacs configuration for the skeptical Vim user
+
+This is my own emacs configuration, thus you'll likely see active commits with keybind changes/additions, more functionality, etc. I came to emacs after using Vim for 4 very formative years of my life in development work, so the general responsiveness and "simplicity" that I saw there is something that I've tried to bring to emacs. I hate feeling latency when I type, but am okay with it when opening a file or doing some other operations, and I think the configuration here is tuned for that.
+
+To my understanding, the main dependencies you'll need to install are =rg=, and some sane emacs version so that the packages all work. You'll also need to install the TTF fonts in =/fonts=. Most things should work OOTB though. You may need to run emacs once to trigger an initial install and then reopen it due to errors, but that's a known issue I've encountered when moving this onto different computers.
+
+ You should update the personal configuration in =/configs/setup.el= to your own information, and then there are some directories that you can optionally configure in =/configs/packages.el= for the org-roam location. I use org roam to maintain my notes and =TODO=, and you can see that pretty clearly in the configuration as a whole.
+
+Keybinds are mostly located in =/configs/keybinds.el= and are maintained using general, with some hydras and submaps here and there. More mode-specific keybinds are in =/configs/packages.el=. Here's a table with the keybinds you may need to know, assuming you already know basic emacs keybinds and vim keybinds.
+
+| Keybind     | Action                                                        |
+|-------------+---------------------------------------------------------------|
+| =SPC SPC=     | search for a file in project hierarchy                        |
+| =SPC .=       | navigate FS/open file                                         |
+| =SPC ;=       | M-x (i hate pressing it)                                      |
+| =SPC j=       | swiper (fancy search in current file)                         |
+| =SPC /=       | ripgrep search the current "project"                          |
+| =SPC p[]=     | keybinds for the [[https://github.com/bbatsov/projectile][projectile]] package                           |
+|-------------+---------------------------------------------------------------|
+| =SPC bb=      | switch to a different open buffer                             |
+| =SPC bk=      | kill buffer                                                   |
+| =SPC bo=      | switch to last used buffer in current window                  |
+| =SPC bm=      | open or add a bookmark                                        |
+| =SPC br=      | search file history to open a file                            |
+| =SPC bd=      | diff two open buffers (useful for golden/actual logs)         |
+|-------------+---------------------------------------------------------------|
+| =SPC wn=      | horizontal split                                              |
+| =SPC wv=      | vertical split                                                |
+| =SPC wc=      | close window                                                  |
+| =SPC w[hjkl]= | move to window                                                |
+| =SPC w[HJKL]= | swap/move window                                              |
+| =SPC w[-+]=   | resize window vertically                                      |
+| =SPC w[<>]=   | resize window horizontally                                    |
+| =SPC w_=      | set window height in rows (w/prefix arg)                      |
+|-------------+---------------------------------------------------------------|
+| =SPC op=      | export org or tex file to pdf                                 |
+| =SPC ov=      | open org or text file's pdf export in system viewer           |
+| =SPC or=      | reload buffer                                                 |
+| =SPC oa=      | open org agenda                                               |
+| =SPC ot=      | open vterm (can be prefixed w/ number for >1 terminals)       |
+|-------------+---------------------------------------------------------------|
+| =SPC fn=      | Toggle comment on highlighted region                          |
+| =SPC fa=      | Align first match of regex on each line of highlighted region |
+|-------------+---------------------------------------------------------------|
+| =SPC gg=      | Open magit                                                    |
+| =SPC gi=      | Native git blame                                              |
+| =SPC gb=      | Fancy git blame                                               |
+|-------------+---------------------------------------------------------------|
+| =SPC nf=      | Org Roam node find                                            |
+| =SPC ni=      | Org Roam node insert                                          |
+
+There are more keybinds that I've not documented here, and I encourage you to discover them by either using the config or by reading the files in the =/configs= directory. An editor configuration is best used when you understand how it works, and I've done my best to make it transparent how this one does. My main gripe with Doom Emacs was obfuscation of all the various settings and defaults under the hood, and I hope that this is not the case with mine.
+
+As an aside, the default theme for my configuration is [[https://github.com/mountain-theme/Mountain][Mountain]], my own colorscheme. This is loaded via the =doom-themes= package, so you should be able to use any doom theme. The caveat here is that I use a custom modeline that hardcodes in colors from the Mountain theme. There is a commented region above my modeline's use-package that includes default settings to use =doom-modeline= instead - this should be compatible with whatever colorscheme you choose to use.
