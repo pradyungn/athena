@@ -85,7 +85,7 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
 
   ;; buffer management
   "bb" '(ivy-switch-buffer                  :which-key "change buffer")
-  "bk" '(kill-this-buffer                   :which-key "kill da buffer")
+  "bk" '(kill-current-buffer                :which-key "kill da buffer")
   "bn" '(next-buffer                        :which-key "next buffer")
   "bl" '(previous-buffer                    :which-key "prev buffer")
   "bo" '(evil-switch-to-windows-last-buffer :which-key "last buffer")
