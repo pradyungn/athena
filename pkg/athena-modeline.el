@@ -155,7 +155,8 @@
                `(,(nerd-icons-icon-for-mode major-mode))
                (if (athena-line-selected-window-active-p)
                    '(font-lock-face `(:height 1.0))
-                 `(face ,`(:family ,nerd-icons-font-family :height 1.0 :inherit mode-line-inactive)))))
+                 `(face ,`(:family ,nerd-icons-font-family :height 1.0 :inherit 'mode-line-inactive)))
+               ))
        " ")
     ""))
 

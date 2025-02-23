@@ -481,10 +481,14 @@
   :defer t)
 
 ;; snippets (v useful)
-(use-package yasnippet-snippets)
 (use-package yasnippet
+  :custom
+  (yas-snippet-dirs
+   `(,(concat user-emacs-directory "snippets")))
   :config
   (yas-global-mode 1))
+(use-package yasnippet-snippets
+  :after yasnippet)
 
 ;; auctex
 (use-package tex
