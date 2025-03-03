@@ -55,13 +55,38 @@
   (ivy-mode 1)
   )
 
-(use-package ivy-rich :init
+(use-package ivy-rich
+  :after ivy
+  :init
   (ivy-rich-mode 1))
 
 (use-package counsel
+  :after ivy
   :bind (:map minibuffer-local-map
 	            ("C-r" . 'counsel-minibuffer-history)))
 
+(use-package counsel-projectile
+  :after (projectile counsel)
+  :config (counsel-projectile-mode))
+
+;; Vertico
+;; (use-package vertico
+;;   :init (vertico-mode)
+;;   :bind (:map vertico-map
+;;               ("C-j" . vertico-next)
+;;               ("C-k" . vertico-previous)
+;;               ("C-f" . vertico-exit)
+;;               :map minibuffer-local-map
+;;               ("M-h" . backward-kill-word)))
+
+;; (use-package savehist
+;;   :init (savehist-mode))
+;; (use-package marginalia
+;;   :after vertico
+;;   :custom
+;;   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+;;   :init
+;;   (marginalia-mode))
 
 ;; enable doom theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -205,9 +230,6 @@
   (projectile-mode)
   :init
   (setq projectile-switch-project-action #'projectile-dired))
-
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
 
 ;; path management
 (use-package exec-path-from-shell
