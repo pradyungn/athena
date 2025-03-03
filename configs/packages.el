@@ -31,6 +31,7 @@
 
 ;; replace default emacs functionality with saner alternatives
 (use-package swiper)
+
 (use-package ivy
   :diminish
   :bind (:map ivy-minibuffer-map
@@ -38,6 +39,7 @@
 	            ("C-l" . ivy-alt-done)
 	            ("C-j" . ivy-next-line)
 	            ("C-k" . ivy-previous-line)
+              ("C-;" . ivy-immediate-done)
 	            :map ivy-switch-buffer-map
 	            ("C-k" . ivy-previous-line)
 	            ("C-l" . ivy-done)
@@ -47,9 +49,19 @@
 	            ("C-d" . ivy-reverse-i-search-kill))
   :custom
   ;; (ivy-use-virtual-buffers t)
+  (projectile-completion-system 'ivy)
   (ivy-count-format "(%d/%d) ")
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+  )
+
+(use-package ivy-rich :init
+  (ivy-rich-mode 1))
+
+(use-package counsel
+  :bind (:map minibuffer-local-map
+	            ("C-r" . 'counsel-minibuffer-history)))
+
 
 ;; enable doom theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -92,13 +104,6 @@
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.25))
-
-(use-package ivy-rich :init
-  (ivy-rich-mode 1))
-
-(use-package counsel
-  :bind (:map minibuffer-local-map
-	            ("C-r" . 'counsel-minibuffer-history)))
 
 ;; better help functions
 (defun athena/display-buffer-here (buffer)
@@ -198,7 +203,6 @@
   :diminish projectile-mode
   :config
   (projectile-mode)
-  :custom ((projectile-completion-system 'ivy))
   :init
   (setq projectile-switch-project-action #'projectile-dired))
 

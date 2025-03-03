@@ -25,10 +25,6 @@
  "C-=" 'text-scale-increase
  "M-;" 'shell-command)
 
-;; Ivy shortcut
-(general-def ivy-minibuffer-map
-  "C-;" 'ivy-immediate-done)
-
 ;; org-roam keybinds
 (defvar athena/roam-map
   (let ((map (make-sparse-keymap)))
@@ -84,7 +80,7 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   "w" '(athena/win-map/body :which-key "window management")
 
   ;; buffer management
-  "bb" '(ivy-switch-buffer                  :which-key "change buffer")
+  "bb" '(switch-to-buffer                   :which-key "change buffer")
   "bk" '(kill-current-buffer                :which-key "kill da buffer")
   "bn" '(next-buffer                        :which-key "next buffer")
   "bl" '(previous-buffer                    :which-key "prev buffer")
