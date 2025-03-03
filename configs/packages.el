@@ -29,64 +29,80 @@
   :ensure nil)
 (gcmh-mode 1)
 
-;; replace default emacs functionality with saner alternatives
-(use-package swiper)
+;; Ivy & Counsel
+;; (use-package swiper)
 
-(use-package ivy
-  :diminish
-  :bind (:map ivy-minibuffer-map
-	            ("TAB" . ivy-alt-done)
-	            ("C-l" . ivy-alt-done)
-	            ("C-j" . ivy-next-line)
-	            ("C-k" . ivy-previous-line)
-              ("C-;" . ivy-immediate-done)
-	            :map ivy-switch-buffer-map
-	            ("C-k" . ivy-previous-line)
-	            ("C-l" . ivy-done)
-	            ("C-d" . ivy-switch-buffer-kill)
-	            :map ivy-reverse-i-search-map
-	            ("C-k" . ivy-previous-line)
-	            ("C-d" . ivy-reverse-i-search-kill))
-  :custom
-  ;; (ivy-use-virtual-buffers t)
-  (projectile-completion-system 'ivy)
-  (ivy-count-format "(%d/%d) ")
-  :config
-  (ivy-mode 1)
-  )
+;; (use-package ivy
+;;   :diminish
+;;   :bind (:map ivy-minibuffer-map
+;; 	            ("TAB" . ivy-alt-done)
+;; 	            ("C-l" . ivy-alt-done)
+;; 	            ("C-j" . ivy-next-line)
+;; 	            ("C-k" . ivy-previous-line)
+;;              ("C-;" . ivy-immediate-done)
+;; 	            :map ivy-switch-buffer-map
+;; 	            ("C-k" . ivy-previous-line)
+;; 	            ("C-l" . ivy-done)
+;; 	            ("C-d" . ivy-switch-buffer-kill)
+;; 	            :map ivy-reverse-i-search-map
+;; 	            ("C-k" . ivy-previous-line)
+;; 	            ("C-d" . ivy-reverse-i-search-kill))
+;;   :custom
+;;   ;; (ivy-use-virtual-buffers t)
+;;   (projectile-completion-system 'ivy)
+;;   (ivy-count-format "(%d/%d) ")
+;;   :config
+;;   (ivy-mode 1)
+;;   )
 
-(use-package ivy-rich
-  :after ivy
-  :init
-  (ivy-rich-mode 1))
+;; (use-package ivy-rich
+;;   :after ivy
+;;   :init
+;;   (ivy-rich-mode 1))
 
-(use-package counsel
-  :after ivy
-  :bind (:map minibuffer-local-map
-	            ("C-r" . 'counsel-minibuffer-history)))
+;; (use-package counsel
+;;   :after ivy
+;;   :bind (:map minibuffer-local-map
+;; 	            ("C-r" . 'counsel-minibuffer-history)))
 
-(use-package counsel-projectile
-  :after (projectile counsel)
-  :config (counsel-projectile-mode))
+;; (use-package counsel-projectile
+;;   :after (projectile counsel)
+;;   :config (counsel-projectile-mode))
 
 ;; Vertico
-;; (use-package vertico
-;;   :init (vertico-mode)
-;;   :bind (:map vertico-map
-;;               ("C-j" . vertico-next)
-;;               ("C-k" . vertico-previous)
-;;               ("C-f" . vertico-exit)
-;;               :map minibuffer-local-map
-;;               ("M-h" . backward-kill-word)))
+(use-package vertico
+  :init (vertico-mode)
+  :bind (:map vertico-map
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous)
+              ("C-;" . vertico-exit)
+              :map minibuffer-local-map
+              ("M-h" . backward-kill-word)))
 
-;; (use-package savehist
-;;   :init (savehist-mode))
-;; (use-package marginalia
-;;   :after vertico
-;;   :custom
-;;   (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-;;   :init
-;;   (marginalia-mode))
+(use-package vertico-directory
+  :after vertico
+  :ensure nil  ;; no need to install, it comes with vertico
+  :bind (:map vertico-map
+    ("DEL" . vertico-directory-delete-char)))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package savehist
+  :init (savehist-mode))
+
+(use-package marginalia
+  :after vertico
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+
+(use-package consult
+  :custom
+  (consult-preview-key nil))
 
 ;; enable doom theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
@@ -137,13 +153,13 @@
 (use-package helpful
   :custom
   (helpful-switch-buffer-function 'athena/display-buffer-here)
-  (counsel-describe-function-function #'helpful-callable)
-  (counsel-describe-variable-function #'helpful-variable)
+  ;; (counsel-describe-function-function #'helpful-callable)
+  ;; (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-key] . helpful-key)
   ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . counsel-describe-variable)
-  ([remap describe-key] . helpful-key))
+  ([remap describe-function] . helpful-function)
+  ([remap describe-variable] . helpful-variable))
 
 ;; vim bindings, my love
 ;; undo system for evil
@@ -465,7 +481,7 @@
   (dashboard-vertically-center-content t)
   (dashboard-icon-type 'nerd-icons)
   (dashboard-projects-backend 'projectile)
-  (dashboard-projects-switch-function 'counsel-projectile-switch-project-by-name)
+  (dashboard-projects-switch-function 'projectile-switch-project-by-name)
   (dashboard-items '((recents  . 8))))
 
 ;; dashboard hook doesn't really work

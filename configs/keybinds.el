@@ -5,8 +5,8 @@
   (interactive)
   (call-interactively
    (if (projectile-project-p)
-       #'counsel-projectile-find-file
-     #'counsel-find-file)))
+       #'projectile-find-file
+     #'find-file)))
 
 (byte-compile 'athena/find-file)
 
@@ -70,11 +70,11 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
 
 (athena/leader-keys
   ;; top-level shortcuts (reserved for very useful stuff)
-  "SPC" '(athena/find-file   :which-key "dynamic file-find")
-  "."   '(find-file          :which-key "file finder")
-  "/"   '(projectile-ripgrep :which-key "rg nyoom")
-  ";"   '(counsel-M-x        :which-key "M-x")
-  "j"   '(swiper             :which-key "better search")
+  "SPC" '(athena/find-file         :which-key "dynamic file-find")
+  "."   '(find-file                :which-key "file finder")
+  "/"   '(consult-ripgrep          :which-key "rg nyoom")
+  ";"   '(execute-extended-command :which-key "M-x")
+  "j"   '(consult-line             :which-key "better search")
 
   ;; Hydras (fancy multilevel chords)
   "w" '(athena/win-map/body :which-key "window management")
@@ -87,8 +87,8 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
   "bo" '(evil-switch-to-windows-last-buffer :which-key "last buffer")
   "bc" '(clone-indirect-buffer              :which-key "clone buffer")
   "bs" '(clone-indirect-buffer-other-window :which-key "split buffer")
-  "bm" '(counsel-bookmark                   :which-key "bookmarks")
-  "br" '(counsel-recentf                    :which-key "buffer hist")
+  "bm" '(consult-bookmark                   :which-key "bookmarks")
+  "br" '(consult-recent-file                :which-key "buffer hist")
   "bd" '(diff-buffers                       :which-key "diff")
 
   ;; projectile
