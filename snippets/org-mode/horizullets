@@ -1,0 +1,6 @@
+# key: <hb
+# name: horizontal_bullets
+# --
+#+begin_horizbullets
+$0
+#+end_horizbullets

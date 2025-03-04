@@ -9,6 +9,10 @@ To my understanding, the main dependencies you'll need to install are =rg=, and 
 
 Keybinds are mostly located in =/configs/keybinds.el= and are maintained using general, with some hydras and submaps here and there. More mode-specific keybinds are in =/configs/packages.el=. Here's a table with the keybinds you may need to know, assuming you already know basic emacs keybinds and vim keybinds.
 
+#+begin_quote
+*NOTE*: While these keybinds are functionally correct, I have moved from Ivy/Counsel to Verticonsult and a plethora of related packages. Some specific keybind names may be inacurrate.
+#+end_quote
+
 | Keybind     | Action                                                        |
 |-------------+---------------------------------------------------------------|
 | =SPC SPC=     | search for a file in project hierarchy                        |
