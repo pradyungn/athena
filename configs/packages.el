@@ -75,7 +75,7 @@
   :bind (:map vertico-map
               ("C-j" . vertico-next)
               ("C-k" . vertico-previous)
-              ("C-;" . vertico-exit)
+              ("C-;" . vertico-exit-input)
               :map minibuffer-local-map
               ("M-h" . backward-kill-word)))
 
