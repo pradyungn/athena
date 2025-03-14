@@ -379,15 +379,15 @@
     "SPC ov" '(athena/open-org-pdf      :which-key "pdf viewer"))
 
   :custom
-  (org-latex-compiler "xelatex")
+  (org-latex-compiler "lualatex")
   (org-startup-folded t)
   (org-capture-bookmark nil)
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
   (org-latex-pdf-process
-   '("xelatex -interaction nonstopmode -output-directory %o %f"
+   '("lualatex -interaction nonstopmode -output-directory %o %f"
      "bibtex %b"
-     "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+     "lualatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-babel-python-command "python3")
   (org-agenda-files '("~/Documents/Notes/Roam/main/"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
