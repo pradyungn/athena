@@ -78,7 +78,8 @@
 		            dashboard-mode-hook
 		            eshell-mode-hook
 		            vterm-mode-hook
-                treemacs-mode-hook))
+                treemacs-mode-hook
+                pdf-view-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode -1))))
 
 ;; prog mode reset

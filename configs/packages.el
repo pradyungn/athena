@@ -570,3 +570,8 @@
   (elfeed-show-mode . athena/elfeed-show-config)
   :custom
   (elfeed-feeds '("https://chrisdone.com/rss.xml")))
+
+
+(use-package pdf-tools
+  :init
+  (pdf-loader-install))
