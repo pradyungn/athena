@@ -569,7 +569,9 @@
   :hook
   (elfeed-show-mode . athena/elfeed-show-config)
   :custom
-  (elfeed-feeds '("https://chrisdone.com/rss.xml")))
+  (elfeed-feeds '("https://chrisdone.com/rss.xml"
+                  "https://planet.emacslife.com/atom.xml"
+                  "https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine.rss")))
 
 
 (use-package pdf-tools
