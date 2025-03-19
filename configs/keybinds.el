@@ -109,9 +109,7 @@ _h_   _l_   _n_ew       _-_ dec height   _\|_  set width
 
   ;; open
   "ot" '(vterm               :which-key "term")
+  "oe" '(elfeed              :which-key "elfeed")
   "oz" '(darkroom-mode       :which-key "zen")
   "oa" '(org-agenda          :which-key "agenda")
-  "or" '(revert-buffer-quick :which-key "reload-buf")
-
-  ;; macros
-  "mt" '(athena/timestamp :which-key "timestamp"))
+  "or" '(revert-buffer-quick :which-key "reload-buf"))
