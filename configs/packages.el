@@ -29,46 +29,6 @@
   :ensure nil)
 (gcmh-mode 1)
 
-;; Ivy & Counsel
-;; (use-package swiper)
-
-;; (use-package ivy
-;;   :diminish
-;;   :bind (:map ivy-minibuffer-map
-;; 	            ("TAB" . ivy-alt-done)
-;; 	            ("C-l" . ivy-alt-done)
-;; 	            ("C-j" . ivy-next-line)
-;; 	            ("C-k" . ivy-previous-line)
-;;              ("C-;" . ivy-immediate-done)
-;; 	            :map ivy-switch-buffer-map
-;; 	            ("C-k" . ivy-previous-line)
-;; 	            ("C-l" . ivy-done)
-;; 	            ("C-d" . ivy-switch-buffer-kill)
-;; 	            :map ivy-reverse-i-search-map
-;; 	            ("C-k" . ivy-previous-line)
-;; 	            ("C-d" . ivy-reverse-i-search-kill))
-;;   :custom
-;;   ;; (ivy-use-virtual-buffers t)
-;;   (projectile-completion-system 'ivy)
-;;   (ivy-count-format "(%d/%d) ")
-;;   :config
-;;   (ivy-mode 1)
-;;   )
-
-;; (use-package ivy-rich
-;;   :after ivy
-;;   :init
-;;   (ivy-rich-mode 1))
-
-;; (use-package counsel
-;;   :after ivy
-;;   :bind (:map minibuffer-local-map
-;; 	            ("C-r" . 'counsel-minibuffer-history)))
-
-;; (use-package counsel-projectile
-;;   :after (projectile counsel)
-;;   :config (counsel-projectile-mode))
-
 ;; Vertico
 (use-package vertico
   :init (vertico-mode)
@@ -113,12 +73,6 @@
 
 ;; Icons
 (use-package nerd-icons)
-
-;; Doom Modeline
-;; (use-package doom-modeline
-;;   :init (doom-modeline-mode 1)
-;;   :custom ((doom-modeline-height 40)
-;; 	         (doom-modeline-bar-width 1)))
 
 ;; Athena Modeline
 (use-package athena-modeline
@@ -216,10 +170,6 @@
   (vterm-kill-buffer-on-exit t)
   (vterm-max-scrollback 5000))
 
-;; (add-to-list 'display-buffer-alist
-;;              '("\\`\\*vterm\\*\\(?:<[[:digit:]]+>\\)?\\'"
-;;                (set-window-dedicated-p)))
-
 (add-hook 'vterm-mode-hook
           (lambda ()
             (setq mode-line-format nil)
@@ -230,14 +180,6 @@
             (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("ssh" "/bin/zsh"))
             (add-to-list 'vterm-tramp-shells '("sudo" "/bin/zsh"))))
-
-;; (cl-loop for file in '("/usr/local/bin/zsh" "/bin/zsh")
-;;         when (file-exists-p file)
-;;         do (progn
-;;             (setq shell-file-name file)
-;;             (cl-return)))
-;; (setenv "SHELL" shell-file-name)
-
 
 ;; projectile
 (use-package projectile
@@ -265,16 +207,6 @@
     (call-process-shell-command (concat "tar -xzvf " athena/bindir
                                         "/verible.tar.gz --strip-components=2 -C "
                                         athena/bindir "/verible"))))
-
-;; auto-format
-;; (setq athena/format-on-write-enable 1)
-;; (defun athena/format-hook ()
-;;   (if (> athena/format-on-write-enable 0)
-;;       (apheleia-mode)))
-
-;; (use-package apheleia
-;;   :hook
-;;   (prog-mode . athena/format-hook))
 
 ;; magit
 (use-package magit
@@ -397,8 +329,6 @@
                             ("STALE"    . "#8aacab")))
   (org-latex-logfiles-extensions
    (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl"))))
-
-;; weird pdflatex bug
 
 (defun athena/org-mode-visual-fill ()
   (setq visual-fill-column-width 100
@@ -573,7 +503,7 @@
                   "https://planet.emacslife.com/atom.xml"
                   "https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine.rss")))
 
-
+;; Better PDF viewer
 (use-package pdf-tools
   :init
   (pdf-loader-install))
