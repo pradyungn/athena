@@ -319,6 +319,7 @@
   (org-capture-bookmark nil)
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
+  (ort-export-with-smart-quotes t)
   (org-latex-pdf-process
    '("lualatex -interaction nonstopmode -output-directory %o %f"
      "bibtex %b"
@@ -504,9 +505,16 @@
   :custom
   (elfeed-feeds '("https://chrisdone.com/rss.xml"
                   "https://planet.emacslife.com/atom.xml"
-                  "https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine.rss")))
+                  "https://www.bloomberg.com/opinion/authors/ARbTQlRLRjE/matthew-s-levine.rss"
+                  "https://hnrss.org/frontpage"
+                  "https://lobste.rs/rss")))
 
 ;; Better PDF viewer
 (use-package pdf-tools
   :init
   (pdf-loader-install))
+
+(use-package wavedrom-mode
+  :custom
+  (wavedrom-output-format "svg")
+  (wavedrom-output-directory "~/.wavedrom"))
