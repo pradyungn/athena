@@ -177,9 +177,9 @@
             (face-remap-add-relative 'mode-line-active   '(:background "#0f0f0f" :foreground "#bfbfbf" :overline "#191919"))
             (face-remap-add-relative 'mode-line-inactive '(:background "#0f0f0f" :overline "#191919"))
             (setq mode-line-format
-                  (list "  %b ["
-                        '(:eval (or (file-remote-p default-directory 'host) "local"))
-                        "]"
+                  (list "  %b"
+                        '(:eval (let ((host (file-remote-p default-directory 'host)))
+                                  (and host (concat "[" host "]"))))
                         '(:eval (if (eq evil-state 'emacs) " | bypass mode"))))
             (setq hscroll-margin 0)
             (set-frame-parameter nil 'bottom-divider-width 1)
