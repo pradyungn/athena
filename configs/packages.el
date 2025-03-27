@@ -141,12 +141,14 @@
   (global-evil-surround-mode 1))
 
 (use-package evil
-  :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
+  :custom
+  (evil-want-integration t)
+  (evil-want-keybinding nil)
   ;; (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-i-jump t)
-  (setq evil-undo-system 'undo-fu)
+  (evil-want-C-i-jump t)
+  (evil-undo-system 'undo-fu)
+  (evil-echo-state nil)
+
   :config
   (evil-mode 1)
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
