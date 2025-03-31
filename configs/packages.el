@@ -351,16 +351,16 @@
     "SPC ov" '(athena/open-org-pdf      :which-key "pdf viewer"))
 
   :custom
-  (org-latex-compiler "lualatex")
+  (org-latex-compiler "xelatex")
   (org-startup-folded t)
   (org-capture-bookmark nil)
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
   (ort-export-with-smart-quotes t)
   (org-latex-pdf-process
-   '("lualatex -interaction nonstopmode -output-directory %o %f"
+   '("xelatex -interaction nonstopmode -output-directory %o %f"
      "bibtex %b"
-     "lualatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+     "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (org-babel-python-command "python3")
   (org-agenda-files '("~/Documents/Notes/Roam/main/"))
   (org-todo-keyword-faces '(("REQUIRED" . "#ac8a8c")
