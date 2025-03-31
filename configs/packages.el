@@ -66,10 +66,17 @@
 
 ;; enable doom theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(use-package doom-themes
-  :init (load-theme 'doom-mountain t)
+;; (use-package doom-themes
+;;   :init (load-theme 'doom-mountain t)
+;;   :config
+;;   (doom-themes-org-config))
+(use-package kanagawa-themes
+  :ensure t
   :config
-  (doom-themes-org-config))
+  (load-theme 'kanagawa-dragon t))
+
+(defun athena/kanagawa-color (color)
+  (car (alist-get color kanagawa-themes-dragon-colors)))
 
 ;; Icons
 (use-package nerd-icons)
@@ -80,6 +87,29 @@
   :ensure nil
   :config
   (athena-modeline))
+
+(let ((bg (athena/kanagawa-color 'bg))
+      (bg-alt (athena/kanagawa-color 'bg-m3))
+      (blue (athena/kanagawa-color 'blue))
+      (bblue (athena/kanagawa-color 'bright-blue))
+      (red (athena/kanagawa-color 'syn-special-3))
+      (bgreen (athena/kanagawa-color 'bright-green))
+      (yellow (athena/kanagawa-color 'diag-warning))
+      (oper (athena/kanagawa-color 'syn-fun))
+      (remote (athena/kanagawa-color 'syn-statement))
+      (magenta (athena/kanagawa-color 'bright-magenta))
+      (fg-dim (athena/kanagawa-color 'fg-dim)))
+   (set-face-attribute 'athena/file-remote            nil :foreground remote :background bg-alt)
+   (set-face-attribute 'athena/modeline-normal        nil :foreground bg     :background blue       :bold 'bold)
+   (set-face-attribute 'athena/modeline-visual        nil :foreground bg     :background bgreen     :bold 'bold)
+   (set-face-attribute 'athena/modeline-insert        nil :foreground bg     :background red        :bold 'bold)
+   (set-face-attribute 'athena/modeline-remove        nil :foreground bg     :background yellow     :bold 'bold)
+   (set-face-attribute 'athena/modeline-emacs         nil :foreground bg     :background bblue      :bold 'bold)
+   (set-face-attribute 'athena/modeline-motion        nil :foreground bg     :background blue       :bold 'bold)
+   (set-face-attribute 'athena/modeline-operator      nil :foreground bg     :background oper       :bold 'bold)
+   (set-face-attribute 'athena/modeline-evil-inactive nil :foreground bg-alt :background fg-dim     :bold 'bold)
+   (set-face-attribute 'athena/modeline-recording     nil :foreground bg     :background magenta    :bold 'bold))
+
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
@@ -174,8 +204,10 @@
 
 (add-hook 'vterm-mode-hook
           (lambda ()
-            (face-remap-add-relative 'mode-line-active   '(:background "#0f0f0f" :foreground "#bfbfbf" :overline "#191919"))
-            (face-remap-add-relative 'mode-line-inactive '(:background "#0f0f0f" :overline "#191919"))
+            ;; (face-remap-add-relative 'mode-line-active   '(:background "#0f0f0f" :foreground "#bfbfbf" :overline "#191919"))
+            ;; (face-remap-add-relative 'mode-line-inactive '(:background "#0f0f0f" :overline "#191919"))
+            (face-remap-add-relative 'mode-line-active   `(:background ,(athena/kanagawa-color 'bg) :foreground "#727169" :overline ,(athena/kanagawa-color 'bg-m1)))
+            (face-remap-add-relative 'mode-line-inactive `(:background ,(athena/kanagawa-color 'bg) :overline ,(athena/kanagawa-color 'bg-m1)))
             (setq mode-line-format
                   (list "  %b"
                         '(:eval (let ((host (file-remote-p default-directory 'host)))
